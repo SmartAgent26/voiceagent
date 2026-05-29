@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
@@ -91,23 +95,23 @@ body {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* Buttons and Inputs */
+/* Base custom classes to support Tailwind utilities */
 input, textarea, select {
   font-family: inherit;
   font-size: 0.95rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-glass);
-  color: var(--color-text-main);
-  border-radius: 10px;
-  padding: 10px 14px;
-  outline: none;
-  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid var(--border-glass) !important;
+  color: var(--color-text-main) !important;
+  border-radius: 10px !important;
+  padding: 10px 14px !important;
+  outline: none !important;
+  transition: all 0.3s ease !important;
 }
 
 input:focus, textarea:focus, select:focus {
-  border-color: var(--color-primary);
-  background: rgba(255, 255, 255, 0.07);
-  box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+  border-color: var(--color-primary) !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.2) !important;
 }
 
 button {
@@ -126,29 +130,29 @@ button {
 }
 
 button.primary {
-  background: var(--gradient-main);
-  color: #fff;
-  box-shadow: 0 4px 15px var(--color-primary-glow);
+  background: var(--gradient-main) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 15px var(--color-primary-glow) !important;
 }
 
 button.primary:hover {
-  transform: translateY(-1.5px);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5) !important;
 }
 
 button.primary:active {
-  transform: translateY(0);
+  transform: translateY(0) !important;
 }
 
 button.secondary {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--color-text-main);
-  border: 1px solid var(--border-glass);
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: var(--color-text-main) !important;
+  border: 1px solid var(--border-glass) !important;
 }
 
 button.secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 button.icon {
@@ -156,14 +160,14 @@ button.icon {
   height: 42px;
   padding: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-glass);
-  color: var(--color-text-main);
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid var(--border-glass) !important;
+  color: var(--color-text-main) !important;
 }
 
 button.icon:hover {
-  background: rgba(255, 255, 255, 0.09);
-  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.09) !important;
+  transform: scale(1.05) !important;
 }
 
 /* Animations and Visualizers */

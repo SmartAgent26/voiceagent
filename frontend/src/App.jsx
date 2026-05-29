@@ -283,7 +283,7 @@ export default function App() {
           <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center mb-4">
             <Bot className="w-9 h-9 text-white animate-pulse" />
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">Voice Agent AI</h1>
+          <h1 className="text-2xl font-bold text-white mb-2">ACIZER Personal Voice Agent</h1>
           <p className="text-sm text-slate-500 text-center mb-6">El asistente de automatización y control semántico e inteligente.</p>
 
           {authMsg && (
@@ -344,7 +344,7 @@ export default function App() {
         <div className="p-4 flex items-center justify-between border-b border-white/10">
           <div className="flex items-center gap-2 text-indigo-400">
             <Bot className="w-5 h-5" />
-            <span className="font-semibold text-sm text-white">Voice Agent</span>
+            <span className="font-semibold text-sm text-white">ACIZER</span>
           </div>
           <button 
             className="icon w-8 h-8 hover:bg-white/5" 
