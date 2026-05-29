@@ -1,0 +1,50 @@
+# Secrets and Configs
+.env
+.env.*
+client_secret_*.json
+token.json
+credentials.json
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.toast
+.cache
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ipynb_checkpoints
+
+# Node / Frontend
+node_modules/
+dist/
+.next/
+out/
+build/
+.svelte-kit/
+.svelte/
+.output/
+.vercel
+.pnpm-debug.log*
+
+# OS / IDE
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
