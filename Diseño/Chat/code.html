@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>AKSIS - Coaching Ontológico Deportivo</title>
+<!-- Google Fonts: Plus Jakarta Sans & Newsreader Serif -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Newsreader"', 'serif'],
+          },
+          colors: {
+            aksis: {
+              cream: '#FAF9F6',
+              surface: '#F4F7F5',
+              dark: '#1B3832',
+              teal: '#2F6B60',
+              mint: '#48A999',
+              mintLight: '#D8EFE8',
+              mintSoft: '#E8F5F1',
+              peachLight: '#FCEFEA',
+              peachAccent: '#E8927C',
+              sageBubble: '#DBE9E2',
+              textMain: '#1A2926',
+              textMuted: '#586A65',
+              textSubtle: '#8C9E99'
+            }
+          },
+          boxShadow: {
+            'soft-card': '0 4px 20px -2px rgba(47, 107, 96, 0.05)',
+            'bubble': '0 2px 8px -1px rgba(27, 56, 50, 0.04)',
+            'send-btn': '0 4px 12px rgba(47, 107, 96, 0.25)'
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styling for Mobile Container -->
+<style data-purpose="mobile-frame">
+    body {
+      background-color: #ECEFEF;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    /* Hide native scrollbar for pristine app aesthetic */
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-full flex items-center justify-center p-0 sm:py-6 text-aksis-textMain">
+<!-- BEGIN: iPhone Frame Container -->
+<div class="relative w-full max-w-[430px] h-screen sm:h-[915px] bg-[#F9FAF8] sm:rounded-[54px] shadow-2xl overflow-hidden flex flex-col border-0 sm:border-[8px] sm:border-[#1E2322]">
+<!-- Dynamic Island / Sensor Notch Simulation for iOS -->
+<div class="absolute top-2.5 left-1/2 -translate-x-1/2 w-[124px] h-[34px] bg-black rounded-full z-50 pointer-events-none hidden sm:flex items-center justify-end px-3">
+<div class="w-3 h-3 rounded-full bg-[#0a1b24] border border-[#1a2830]"></div>
+</div>
+<!-- BEGIN: iOS Status Bar -->
+<div class="pt-3 pb-1 px-8 flex justify-between items-center text-[14px] font-semibold tracking-tight text-aksis-textMain z-40 select-none">
+<span>9:41</span>
+<!-- iOS Right Status Icons -->
+<div class="flex items-center gap-1.5 text-aksis-textMain">
+<!-- Cellular Signal -->
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<path class="opacity-0" d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 18.25c-.2.2-.2.51 0 .71.2.2.51.2.71 0l.64-.64C7.23 19.34 9.48 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"></path>
+<path d="M2 17h3v4H2v-4zm5-4h3v8H7v-8zm5-4h3v12h-3V9zm5-5h3v17h-3V4z"></path>
+</svg>
+<!-- Wi-Fi -->
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4zm0 3.5c3.8 0 7.27 1.5 9.8 3.93L12 18.27 2.2 11.43C4.73 9 8.2 7.5 12 7.5z"></path>
+</svg>
+<!-- Battery -->
+<div class="w-5 h-2.5 border border-aksis-textMain rounded-sm p-[1px] flex items-center">
+<div class="w-full h-full bg-aksis-textMain rounded-2xs"></div>
+</div>
+</div>
+</div>
+<!-- END: iOS Status Bar -->
+<!-- BEGIN: Main Header -->
+<header class="px-6 pt-2 pb-3.5 flex items-center justify-between border-b border-[#EEF2F0]/80 bg-[#F9FAF8]/90 backdrop-blur-md z-30">
+<!-- Logo Branding -->
+<div class="flex items-center gap-2.5">
+<img alt="AKSIS Logo" class="w-8 h-8 rounded-full object-cover shadow-sm ring-1 ring-aksis-mint/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAscbeX68795gXWAZ5xC5_5Tj4b_13N34FWqMrTRaQ2_V9q8qov7gVoRVyjEIgdEMUp4mO7jZ729x6LiQMxqz5Tw0FaSQkqcFK8tWUwwdneiuDbPKxgkNt5XEFG-Gt6MZlJqvPAddEb9YahPTJHq4t5EWYUOsrmspBc0xikkYGRmlQ_qqzT3Pvz7Gm8Q_8WIUaPfF78mi8nYLjaXuXd6SM_iFWc_ntRMWryLgXsFjOk_SzNq1ECslulCsvTN9HaigZY130"/>
+<div class="flex flex-col">
+<h1 class="font-serif text-2xl font-semibold tracking-tight text-aksis-dark leading-none">
+            Aksis
+          </h1>
+<span class="text-[10px] tracking-wider uppercase font-semibold text-aksis-teal/70 mt-0.5">
+            Coaching Ontológico
+          </span>
+</div>
+</div>
+<!-- Action Pill & Options -->
+<div class="flex items-center gap-2">
+<!-- Session Timer Capsule -->
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-aksis-mintSoft border border-aksis-mintLight text-aksis-teal text-xs font-medium shadow-sm">
+<svg class="w-3.5 h-3.5 stroke-current stroke-[2.2] fill-none" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 15"></polyline>
+</svg>
+<span><strong class="font-semibold">14:32</strong> <span class="text-aksis-teal/70 font-normal">de 20 min</span></span>
+</div>
+<!-- Options Button -->
+<button aria-label="Opciones" class="w-8 h-8 flex items-center justify-center rounded-full bg-white/80 border border-gray-200/70 text-aksis-textMuted active:scale-95 transition-transform">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24">
+<circle cx="5" cy="12" r="2"></circle>
+<circle cx="12" cy="12" r="2"></circle>
+<circle cx="19" cy="12" r="2"></circle>
+</svg>
+</button>
+</div>
+</header>
+<!-- END: Main Header -->
+<!-- BEGIN: Chat Conversation Area -->
+<main class="flex-1 overflow-y-auto px-5 pt-4 pb-2 space-y-5 hide-scrollbar">
+<!-- Coach Initial Message -->
+<article class="flex flex-col items-start max-w-[90%]" data-purpose="coach-message">
+<div class="flex items-center gap-2 mb-1.5 pl-1">
+<!-- Coach Avatar with AKSIS Emblem -->
+<div class="w-7 h-7 rounded-full bg-gradient-to-tr from-aksis-mintSoft to-white p-0.5 shadow-sm border border-aksis-mintLight flex items-center justify-center">
+<svg class="w-4 h-4 text-aksis-mint stroke-[2.2] fill-none" viewbox="0 0 24 24">
+<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+<path d="M2 21c0-3 1.85-5.36 5.08-6"></path>
+</svg>
+</div>
+<span class="text-xs font-semibold text-aksis-textMuted">Coach AKSIS</span>
+<span class="text-[11px] text-aksis-textSubtle">9:41</span>
+</div>
+<!-- Speech Bubble -->
+<div class="bg-white text-aksis-textMain rounded-[22px] rounded-tl-sm px-5 py-4 shadow-bubble border border-[#E9EFEB] leading-relaxed">
+<p class="font-semibold text-[15px] text-aksis-dark mb-1.5">
+            Hola, ¿cómo estás hoy?
+          </p>
+<p class="text-[14px] text-aksis-textMuted leading-relaxed font-normal">
+            Antes de empezar, tómate un momento para conectar contigo. ¿Cómo llega tu mente y tu cuerpo a esta sesión?
+          </p>
+</div>
+</article>
+<!-- User Response Message -->
+<article class="flex flex-col items-end ml-auto max-w-[85%]" data-purpose="user-message">
+<div class="flex items-center gap-1.5 mb-1.5 pr-1">
+<span class="text-xs font-medium text-aksis-textMuted">Tú</span>
+<span class="text-[10px] text-aksis-textSubtle">•</span>
+<span class="text-[11px] text-aksis-textSubtle">9:43</span>
+</div>
+<!-- Mint Sage Tinted Bubble -->
+<div class="bg-aksis-sageBubble/85 text-aksis-dark rounded-[22px] rounded-tr-sm px-5 py-3.5 shadow-sm border border-[#CFE0D7] text-[14px] leading-relaxed">
+          Hoy me siento un poco cansado, pero con ganas de seguir. He tenido varios entrenamientos seguidos y me cuesta desconectar la mente.
+        </div>
+</article>
+<!-- Coach Thoughtful Feedback -->
+<article class="flex flex-col items-start max-w-[92%]" data-purpose="coach-message">
+<div class="flex items-center gap-2 mb-1.5 pl-1">
+<div class="w-7 h-7 rounded-full bg-gradient-to-tr from-aksis-mintSoft to-white p-0.5 shadow-sm border border-aksis-mintLight flex items-center justify-center">
+<svg class="w-4 h-4 text-aksis-mint stroke-[2.2] fill-none" viewbox="0 0 24 24">
+<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+<path d="M2 21c0-3 1.85-5.36 5.08-6"></path>
+</svg>
+</div>
+<span class="text-xs font-semibold text-aksis-textMuted">Coach AKSIS</span>
+<span class="text-[11px] text-aksis-textSubtle">9:44</span>
+</div>
+<div class="bg-white text-aksis-textMain rounded-[22px] rounded-tl-sm px-5 py-4 shadow-bubble border border-[#E9EFEB] leading-relaxed space-y-2">
+<p class="font-semibold text-[15px] text-aksis-dark">
+            Gracias por compartirlo.
+          </p>
+<p class="text-[14px] text-aksis-textMuted leading-relaxed">
+            Es totalmente comprensible. Tu compromiso habla de tu disciplina. Hoy podemos trabajar en cómo equilibrar exigencia y descanso, para que sigas avanzando con claridad y bienestar. ¿Te parece?
+          </p>
+</div>
+</article>
+<!-- BEGIN: Anchor Coaching Commitment Card -->
+<section class="mt-4 rounded-2xl bg-gradient-to-b from-[#FDF3EE] to-[#FAF1EB] border border-[#F5DFD5] p-4 shadow-soft-card" data-purpose="commitment-card">
+<!-- Card Header with Flag and Subtitle -->
+<div class="flex items-center justify-between pb-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-md bg-[#FCE5DA] flex items-center justify-center text-aksis-peachAccent">
+<svg class="w-3.5 h-3.5 fill-current" viewbox="0 0 24 24">
+<path d="M4 2v20h2v-7h14l-2-6 2-6H6V2H4z"></path>
+</svg>
+</div>
+<h2 class="font-serif text-[16px] font-semibold text-[#66382B] tracking-tight">
+              Compromiso de hoy
+            </h2>
+</div>
+<span class="text-[11px] font-medium text-aksis-peachAccent tracking-tight text-right">
+            Un pequeño paso,<br class="leading-none"/>gran impacto.
+          </span>
+</div>
+<!-- Inner Action Card -->
+<div class="bg-white/90 backdrop-blur-sm rounded-xl p-3.5 border border-white flex items-center gap-3.5 shadow-sm active:bg-white transition-colors cursor-pointer group">
+<!-- Icon Emblem -->
+<div class="w-10 h-10 rounded-full bg-aksis-mintSoft flex-shrink-0 flex items-center justify-center border border-aksis-mintLight/80">
+<svg class="w-5 h-5 text-aksis-teal stroke-[2] fill-none" viewbox="0 0 24 24">
+<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12c0 2.21.716 4.254 1.93 5.92"></path>
+<path d="M7 12c1.5-2 3.5-3 5-3s3.5 1 5 3"></path>
+<path d="M12 9v6"></path>
+</svg>
+</div>
+<!-- Commitment Text -->
+<div class="flex-1">
+<p class="text-[13px] font-medium text-aksis-dark leading-snug">
+              Dedicar 10 minutos esta noche a una respiración consciente antes de dormir.
+            </p>
+</div>
+<!-- Chevron -->
+<div class="text-[#A5B5AF] group-hover:text-aksis-teal group-hover:translate-x-0.5 transition-all">
+<svg class="w-4 h-4 stroke-current stroke-[2.5] fill-none" viewbox="0 0 24 24">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</div>
+</div>
+</section>
+<!-- END: Anchor Coaching Commitment Card -->
+</main>
+<!-- END: Chat Conversation Area -->
+<!-- BEGIN: Bottom Interactive Chat Bar -->
+<footer class="p-4 pt-2 bg-gradient-to-t from-[#F9FAF8] via-[#F9FAF8] to-[#F9FAF8]/70 border-t border-[#EDF1EE]">
+<div class="flex items-center gap-2">
+<!-- Attachment / Wellness Tool Button -->
+<button aria-label="Adjuntar archivo o nota" class="w-10 h-10 flex-shrink-0 rounded-full bg-white border border-[#E3EAE6] text-aksis-textMuted hover:text-aksis-teal flex items-center justify-center active:scale-95 transition-all shadow-sm">
+<svg class="w-5 h-5 stroke-current stroke-[2] fill-none rotate-45" viewbox="0 0 24 24">
+<path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l7.88-7.88"></path>
+</svg>
+</button>
+<!-- Message Input Field -->
+<div class="flex-1 relative">
+<input class="w-full h-11 pl-4 pr-10 rounded-full bg-white border border-[#DFE7E3] text-[14px] text-aksis-dark placeholder-aksis-textSubtle focus:outline-none focus:ring-2 focus:ring-aksis-mint/30 focus:border-aksis-mint transition-all shadow-inner" placeholder="Escribe un mensaje..." type="text"/>
+<!-- Gentle mindfulness prompt icon inside input -->
+<button aria-label="Pausa de respiración" class="absolute right-3 top-1/2 -translate-y-1/2 text-aksis-textSubtle hover:text-aksis-teal transition-colors">
+<svg class="w-4 h-4 fill-none stroke-current stroke-2" viewbox="0 0 24 24">
+<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+</svg>
+</button>
+</div>
+<!-- Send Message Button -->
+<button aria-label="Enviar mensaje" class="w-11 h-11 flex-shrink-0 rounded-full bg-aksis-teal text-white flex items-center justify-center shadow-send-btn hover:bg-[#235347] active:scale-90 transition-all">
+<svg class="w-5 h-5 stroke-current stroke-[2.2] fill-none -rotate-12 translate-x-0.5" viewbox="0 0 24 24">
+<line x1="22" x2="11" y1="2" y2="13"></line>
+<polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+</svg>
+</button>
+</div>
+<!-- iOS Home Indicator -->
+<div class="w-32 h-1 bg-aksis-textMain/25 rounded-full mx-auto mt-3.5 mb-0.5"></div>
+</footer>
+<!-- END: Bottom Interactive Chat Bar -->
+</div>
+<!-- END: iPhone Frame Container -->
+</body></html>

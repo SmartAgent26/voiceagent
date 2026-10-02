@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-secondary-fixed": "#331012", "on-tertiary-container": "#003930", "on-surface-variant": "#3e4946", "on-primary-fixed-variant": "#005046", "surface-dim": "#d1ddd8", "secondary": "#815152", "on-secondary-fixed-variant": "#663a3b", "surface-container-high": "#dfebe6", "tertiary": "#186a5c", "on-primary-fixed": "#00201b", "on-error-container": "#93000a", "surface-container-lowest": "#ffffff", "primary-container": "#48a999", "secondary-container": "#febfbf", "on-tertiary-fixed": "#00201b", "error": "#ba1a1a", "on-error": "#ffffff", "inverse-surface": "#28332f", "primary-fixed-dim": "#78d7c6", "surface-container-low": "#ebf6f1", "on-secondary-container": "#7a4b4c", "surface-tint": "#006b5e", "secondary-fixed-dim": "#f5b7b7", "background": "#f1fcf7", "surface-container": "#e5f0eb", "tertiary-fixed": "#a6f1df", "outline-variant": "#bdc9c5", "error-container": "#ffdad6", "primary-fixed": "#95f4e2", "on-primary-container": "#003931", "on-tertiary": "#ffffff", "surface-variant": "#dae5e0", "outline": "#6e7a76", "tertiary-fixed-dim": "#8ad4c3", "surface-container-highest": "#dae5e0", "surface": "#f1fcf7", "on-primary": "#ffffff", "on-tertiary-fixed-variant": "#005045", "inverse-primary": "#78d7c6", "on-secondary": "#ffffff", "on-background": "#141e1b", "surface-bright": "#f1fcf7", "secondary-fixed": "#ffdad9", "on-surface": "#141e1b", "primary": "#006b5e", "inverse-on-surface": "#e8f3ee", "tertiary-container": "#5da797" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "margin-mobile": "1.25rem", "space-sm": "0.75rem", "gutter-mobile": "1rem", "space-lg": "2rem", "margin": "3rem", "space-md": "1.25rem", "space-xl": "3.5rem", "gutter": "1.5rem", "space-xs": "0.375rem" }, fontFamily: { "headline-lg-mobile": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "display-lg-mobile": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"] }, fontSize: { "headline-lg-mobile": ["26px", { "lineHeight": "34px", "fontWeight": "300" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "300" }], "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "600" }], "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "300" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "500" }], "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }], "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "300" }], "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "400" }], "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }], "display-lg-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "300" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.04em", "fontWeight": "500" }] } } } }</script><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#f1fcf7;color:#141e1b;-webkit-font-smoothing:antialiased;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style></head><body class="bg-surface font-body-md text-body-md flex flex-col min-h-screen text-on-surface"><header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] pt-safe"><div class="h-16 px-gutter-mobile flex items-center justify-between"><div class="flex items-center gap-space-xs"><img alt="minilogo.jpg" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UZ2_pPSiuy_jSwFBtthjYFwbZen8Sf50qfAQNTYm4vmu_oc6qW6_W_n4zsGqdYDrgGEyHoQah79HDObu70AkThn2Hqrq3KF96ja4jYW5ckCDrJaUgh1-VeTRMwLLzimFZfzuosefIjx1_fTlxiXX395cBIPxlnsnIJnFQrRBEo8-CObuNYQczdSg4IvGAX8Ey6IqPbfDOd2Kh6FsnqQZ7f4Mr2f7W-8EKi1cxmGR5Ax_cbrXphp0Er2j70CjYLtyz1PWmXqMUfrS8"/><div class="flex flex-col ml-1"><span class="font-label-sm text-label-sm text-primary tracking-wider uppercase">AKSIS</span><span class="font-headline-sm text-headline-sm text-on-surface leading-tight font-medium">Athlete Sanctuary</span></div></div><div class="flex items-center gap-space-xs"><a class="min-w-[44px] min-h-[44px] flex items-center justify-center p-1 rounded-full transition-transform active:scale-95" data-path="athlete-profile" href="#"><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[0_2px_8px_rgba(20,30,27,0.08)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxnBoEPQkZMjukznEc0GW3VmlbZ_4FsZIRFeWM5wQiC4-a4qiSHIjzHw83dJJZPCsQJrhjA_GLJSeyNXJSf5tPJHRPZOlP_C2Hpcgl4ap-n_efcGXsnf-9jU645MTjQA5i7cBgbDMIHxNr4Z41dXXt3o4otKX-euGS6SXO96khuoSygqoeKjtMDB5cORvbxva0ISGzLkvX9S41PF_Sr70ybYQTF5-AEFGsQRz-uQmqwuWHedLWaWB8OQ"/></a></div></div></header><main class="flex flex-col flex-1 w-full bg-surface pt-16 pb-24 px-gutter-mobile"><div class="flex flex-col w-full space-y-space-md">
+<!-- CABECERA: Navegación superior y contexto íntimo -->
+<section class="flex flex-col space-y-space-xs">
+<div class="flex items-center justify-between">
+<a class="inline-flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors py-1" href="#">
+<span class="material-symbols-outlined text-[20px]">arrow_back_ios_new</span>
+<span class="font-label-lg text-label-lg font-medium">Volver a Mi Espacio</span>
+</a>
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm tracking-wide">
+        15 entradas
+      </span>
+</div>
+<div class="pt-1">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-light tracking-tight">
+        Bitácora Personal
+      </h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+        Tu espacio íntimo de registro somático, emocional y ontológico.
+      </p>
+</div>
+</section>
+<!-- BÚSQUEDA Y FILTROS RÁPIDOS -->
+<section class="flex flex-col space-y-space-xs">
+<div class="flex items-center gap-space-xs">
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[20px]">
+          search
+        </span>
+<input class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface-container-lowest text-on-surface font-body-sm text-body-sm placeholder:text-outline shadow-[0_2px_12px_rgba(20,30,27,0.03)] focus:outline-none focus:ring-2 focus:ring-primary-container/40 transition-all" placeholder="Buscar sensaciones, palabras clave, fechas..." type="text"/>
+</div>
+<button aria-label="Abrir filtros" class="h-[42px] px-3.5 rounded-xl bg-surface-container-low text-primary flex items-center justify-center gap-1 hover:bg-surface-container transition-colors shadow-sm" id="toggleFiltersBtn" type="button">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+<span class="font-label-sm text-label-sm hidden sm:inline">Filtros</span>
+</button>
+</div>
+<!-- Chips de filtrado rápido somático -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 text-nowrap scrollbar-none">
+<button class="px-3 py-1 rounded-full bg-primary text-on-primary font-label-sm text-label-sm shadow-sm">
+        Todas
+      </button>
+<button class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors">
+        ⚡ Energía Plena
+      </button>
+<button class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors">
+        🌿 Presencia
+      </button>
+<button class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors">
+        💭 Inquietud
+      </button>
+<button class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors">
+        Pilar Cuerpo
+      </button>
+</div>
+</section>
+<!-- FORMULARIO DE NUEVA ENTRADA (Tarjeta Expandida y Consciente) -->
+<section class="bg-surface-container-lowest rounded-2xl p-space-md shadow-[0_4px_24px_rgba(20,30,27,0.05)] relative overflow-hidden transition-all">
+<!-- Acento sutil somático lateral -->
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary-container"></div>
+<div class="flex items-center justify-between mb-space-sm pl-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]" style="font-variation-settings: 'FILL' 1;">
+          edit_note
+        </span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-medium">
+          Nuevo registro somático
+        </h2>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-primary">schedule</span>
+        Hoy, 18:30 h
+      </span>
+</div>
+<!-- Mood Tracker Somático / Ontológico -->
+<div class="space-y-2 mb-space-sm pl-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant block uppercase tracking-wider">
+        ¿Cómo llega tu cuerpo y emoción?
+      </label>
+<div class="grid grid-cols-5 gap-1.5 sm:gap-2">
+<button class="mood-pill flex flex-col items-center justify-center p-2 rounded-xl bg-surface-container-low hover:bg-surface-container transition-all active:scale-95 text-center" type="button">
+<span class="text-xl leading-none">😊</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant mt-1.5 leading-tight">Calma</span>
+</button>
+<button class="mood-pill active-mood flex flex-col items-center justify-center p-2 rounded-xl bg-secondary-fixed/50 text-on-secondary-fixed shadow-[0_2px_8px_rgba(129,81,82,0.12)] transition-all active:scale-95 text-center ring-2 ring-secondary-container" type="button">
+<span class="text-xl leading-none">⚡</span>
+<span class="font-label-sm text-[10px] font-semibold text-on-secondary-fixed mt-1.5 leading-tight">Energía</span>
+</button>
+<button class="mood-pill flex flex-col items-center justify-center p-2 rounded-xl bg-surface-container-low hover:bg-surface-container transition-all active:scale-95 text-center" type="button">
+<span class="text-xl leading-none">🌿</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant mt-1.5 leading-tight">Presencia</span>
+</button>
+<button class="mood-pill flex flex-col items-center justify-center p-2 rounded-xl bg-surface-container-low hover:bg-surface-container transition-all active:scale-95 text-center" type="button">
+<span class="text-xl leading-none">💭</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant mt-1.5 leading-tight">Inquietud</span>
+</button>
+<button class="mood-pill flex flex-col items-center justify-center p-2 rounded-xl bg-surface-container-low hover:bg-surface-container transition-all active:scale-95 text-center" type="button">
+<span class="text-xl leading-none">🌧️</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant mt-1.5 leading-tight">Cansancio</span>
+</button>
+</div>
+</div>
+<!-- Campos del Formulario -->
+<form class="space-y-space-sm pl-1" onsubmit="event.preventDefault();">
+<!-- Título Opcional -->
+<div>
+<label class="font-label-sm text-label-sm text-on-surface-variant block mb-1" for="entry-title">
+          Título <span class="font-normal text-outline text-[10px]">(opcional)</span>
+</label>
+<input class="w-full px-3.5 py-2 rounded-xl bg-surface-container-low text-on-surface font-body-sm text-body-sm placeholder:text-outline/70 focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary-container transition-all" id="entry-title" placeholder="Ej. Entrenamiento martes, Sensaciones post-partido..." type="text"/>
+</div>
+<!-- Selector de Objetivo Ontológico (Opcional) -->
+<div>
+<label class="font-label-sm text-label-sm text-on-surface-variant block mb-1" for="entry-goal">
+          Vincular a un objetivo ontológico <span class="font-normal text-outline text-[10px]">(opcional)</span>
+</label>
+<div class="relative">
+<select class="w-full appearance-none px-3.5 py-2 rounded-xl bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary-container transition-all pr-9 cursor-pointer" id="entry-goal">
+<option value="">Seleccionar un foco de trabajo...</option>
+<option selected="" value="cuerpo-rutina">Pilar: Cuerpo · Rutina precompetitiva y anclaje</option>
+<option value="emocion-autoexigencia">Pilar: Emoción · Gestionar autoexigencia y juicio</option>
+<option value="lenguaje-reencuadre">Pilar: Lenguaje · Reencuadre y diálogo interno</option>
+<option value="presencia-respiracion">Pilar: Centrado · Respiración diafragmática</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[18px]">
+            unfold_more
+          </span>
+</div>
+</div>
+<!-- Área de Texto para Comentario / Reflexión (ÚNICO OBLIGATORIO) -->
+<div>
+<div class="flex items-center justify-between mb-1">
+<label class="font-label-sm text-label-sm text-on-surface font-semibold flex items-center gap-1" for="entry-reflection">
+            Reflexión y Sentir Somático
+            <span class="text-error font-medium text-[11px]">* Obligatorio</span>
+</label>
+<span class="font-label-sm text-[10px] text-outline">El corazón de tu proceso</span>
+</div>
+<textarea class="w-full px-3.5 py-2.5 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md placeholder:text-outline/70 focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/50 transition-all resize-none shadow-inner" id="entry-reflection" placeholder="¿Qué sensaciones corporales, pensamientos o quiebres aparecieron hoy? Describe tu postura, respiración o el diálogo interior observado..." required="" rows="4"></textarea>
+</div>
+<!-- Zona de carga de fotografía / somatografía -->
+<div>
+<label class="font-label-sm text-label-sm text-on-surface-variant block mb-1.5">
+          Registro visual o selfie del momento <span class="font-normal text-outline text-[10px]">(opcional)</span>
+</label>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface-container-high/60 hover:bg-surface-container-high text-on-surface font-body-sm text-body-sm transition-colors active:scale-95" type="button">
+<span class="material-symbols-outlined text-primary text-[20px]">add_a_photo</span>
+<span>Adjuntar captura</span>
+</button>
+<span class="font-body-sm text-[12px] text-outline truncate">
+            JPG, PNG o foto instantánea
+          </span>
+</div>
+</div>
+<!-- Botones de Acción -->
+<div class="flex items-center justify-end gap-space-xs pt-2">
+<button class="px-4 py-2.5 rounded-full font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" type="button">
+          Descartar
+        </button>
+<button class="px-6 py-2.5 rounded-full bg-primary hover:bg-tertiary text-on-primary font-label-lg text-label-lg shadow-[0_4px_16px_rgba(0,107,94,0.22)] transition-all flex items-center gap-2 active:scale-95" type="submit">
+<span class="material-symbols-outlined text-[18px]">bookmark_add</span>
+<span>Guardar registro</span>
+</button>
+</div>
+</form>
+</section>
+<!-- LISTA / FEED DE ENTRADAS ANTERIORES -->
+<section class="space-y-space-sm pt-2">
+<div class="flex items-center justify-between px-1">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-medium">
+        Tus registros recientes
+      </h2>
+<span class="font-label-sm text-label-sm text-outline">
+        Ordenado por fecha
+      </span>
+</div>
+<!-- ENTRADA 1: Destacada con foto adjunta https://lh3.googleusercontent.com/aida-public/AB6AXuDf85JGuS-cmiSUI-frwh_ozqaG6xNyQCowixRLoTMbe4mQAERrWnAeLjTrWdjLl7BSkSu4SznBranOxB7HxjvoqVXudaZCyWLzEbZ8qTCzocgp0OtYcH87Eah_vKhg-d9bXN1CjIFuNcaM3bU5LPdvC7EeOwI2nZLgulM6CJaqTd4opOq1ZRLdQMHoc_Il6O3RhP3Zd806Hr21sOxuRum37W1Apu-yxi3xqOs7sye7y2k188NclyZgxg -->
+<article class="bg-surface-container-lowest rounded-2xl p-space-md shadow-[0_3px_18px_rgba(20,30,27,0.04)] space-y-space-sm transition-all hover:shadow-[0_6px_22px_rgba(20,30,27,0.06)]">
+<!-- Encabezado de la Entrada -->
+<div class="flex items-start justify-between gap-2">
+<div class="space-y-1">
+<div class="flex flex-wrap items-center gap-2">
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span>⚡</span> Entusiasmada · Plena energía
+            </span>
+<span class="font-body-sm text-[12px] text-outline">
+              Martes 14 Mayo · 18:45
+            </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold pt-0.5">
+            Entrenamiento martes
+          </h3>
+</div>
+<!-- Acciones Directas: Editar y Borrar -->
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors" title="Editar registro" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-error-container/40 transition-colors" title="Eliminar registro" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+<!-- Tag del Objetivo Ontológico -->
+<div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">track_changes</span>
+          Pilar: Cuerpo · Rutina precompetitiva
+        </span>
+</div>
+<!-- Imagen Registrada por la Atleta -->
+<div class="relative w-full aspect-square max-h-[300px] overflow-hidden rounded-xl bg-surface-container-low shadow-sm">
+<img alt="Selfie de la atleta en cancha de rugby con sonrisa enérgica y luz cálida" class="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf85JGuS-cmiSUI-frwh_ozqaG6xNyQCowixRLoTMbe4mQAERrWnAeLjTrWdjLl7BSkSu4SznBranOxB7HxjvoqVXudaZCyWLzEbZ8qTCzocgp0OtYcH87Eah_vKhg-d9bXN1CjIFuNcaM3bU5LPdvC7EeOwI2nZLgulM6CJaqTd4opOq1ZRLdQMHoc_Il6O3RhP3Zd806Hr21sOxuRum37W1Apu-yxi3xqOs7sye7y2k188NclyZgxg"/>
+<div class="absolute bottom-2.5 left-2.5 px-2.5 py-1 rounded-lg bg-inverse-surface/70 backdrop-blur-md text-inverse-on-surface font-label-sm text-[11px] flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">location_on</span>
+          Cancha de Club · Post scrum
+        </div>
+</div>
+<!-- Reflexión Principal / Somática -->
+<div class="bg-surface-container-low/60 rounded-xl p-3.5 border-l-2 border-primary-container">
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+          “Sentí muy buena respuesta física en los sprints y en el scrum. Logré parar la cabeza antes de la patada respirando hondo dos veces como me sugirió Meli. Me voy con sensación de avance real.”
+        </p>
+</div>
+<!-- Sutil Nota de Apoyo Ontológico -->
+<div class="flex items-center justify-between pt-1 text-outline font-label-sm text-[11px]">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-tertiary">check_circle</span>
+          Integrado con diálogo de Coaching
+        </span>
+<button class="text-primary font-medium hover:underline flex items-center gap-0.5">
+<span>Ver con Meli</span>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+</button>
+</div>
+</article>
+<!-- ENTRADA 2: Registro Reflexivo/Emocional sin foto -->
+<article class="bg-surface-container-lowest rounded-2xl p-space-md shadow-[0_3px_18px_rgba(20,30,27,0.04)] space-y-space-sm transition-all hover:shadow-[0_6px_22px_rgba(20,30,27,0.06)]">
+<div class="flex items-start justify-between gap-2">
+<div class="space-y-1">
+<div class="flex flex-wrap items-center gap-2">
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span>💭</span> Inquietud somática
+            </span>
+<span class="font-body-sm text-[12px] text-outline">
+              Lunes 13 Mayo · 21:15
+            </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold pt-0.5">
+            Reflexión post-competencia
+          </h3>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors" title="Editar registro" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-error-container/40 transition-colors" title="Eliminar registro" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+<div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">psychology</span>
+          Pilar: Emoción · Gestionar autoexigencia
+        </span>
+</div>
+<!-- Reflexión Somática Detallada -->
+<div class="bg-surface-container-low/60 rounded-xl p-3.5 border-l-2 border-secondary-container">
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+          “Apareció tensión en los hombros al inicio del segundo tiempo. Reconocí la voz de autoexigencia y pude aflojar la mandíbula sin juzgarme tanto.”
+        </p>
+</div>
+<div class="flex items-center justify-between pt-1 text-outline font-label-sm text-[11px]">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">spa</span>
+          Descompresión corporal completada
+        </span>
+<span class="text-on-surface-variant">Duración: 15 min</span>
+</div>
+</article>
+<!-- ENTRADA 3: Pausa Consciente Breve -->
+<article class="bg-surface-container-lowest rounded-2xl p-space-md shadow-[0_3px_18px_rgba(20,30,27,0.04)] space-y-space-sm transition-all hover:shadow-[0_6px_22px_rgba(20,30,27,0.06)]">
+<div class="flex items-start justify-between gap-2">
+<div class="space-y-1">
+<div class="flex flex-wrap items-center gap-2">
+<span class="px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span>🌿</span> En presencia
+            </span>
+<span class="font-body-sm text-[12px] text-outline">
+              Domingo 12 Mayo · 13:00
+            </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold pt-0.5">
+            Pausa consciente del mediodía
+          </h3>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors" title="Editar registro" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-error-container/40 transition-colors" title="Eliminar registro" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</div>
+<div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-tertiary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">record_voice_over</span>
+          Pilar: Lenguaje · Reencuadre interno
+        </span>
+</div>
+<div class="bg-surface-container-low/60 rounded-xl p-3.5 border-l-2 border-primary-fixed-dim">
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+          “5 minutos de respiración diafragmática. El cuerpo agradeció el silencio.”
+        </p>
+</div>
+</article>
+</section>
+<!-- MOMENTO DE DELICADEZA ONTOLÓGICA (Footer de la bitácora) -->
+<section class="p-space-md rounded-2xl bg-surface-container-low/50 text-center flex flex-col items-center justify-center space-y-1.5 mt-2">
+<span class="material-symbols-outlined text-primary text-[24px]">filter_vintage</span>
+<p class="font-body-sm text-body-sm text-on-surface font-medium">
+      “Nombrar lo que el cuerpo siente es el primer paso para transformarlo.”
+    </p>
+<span class="font-label-sm text-[10px] text-outline uppercase tracking-widest">
+      AKSIS · Consciencia Somática
+    </span>
+</section>
+</div>
+<script>
+  // Micro-interacción: Selección activa en el Mood Tracker
+  document.querySelectorAll('.mood-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.mood-pill').forEach(el => {
+        el.classList.remove('active-mood', 'bg-secondary-fixed/50', 'text-on-secondary-fixed', 'shadow-[0_2px_8px_rgba(129,81,82,0.12)]', 'ring-2', 'ring-secondary-container');
+        el.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+      });
+      btn.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+      btn.classList.add('active-mood', 'bg-secondary-fixed/50', 'text-on-secondary-fixed', 'shadow-[0_2px_8px_rgba(129,81,82,0.12)]', 'ring-2', 'ring-secondary-container');
+    });
+  });
+
+  // Micro-interacción: Sutil confirmación visual al enviar
+  const form = document.querySelector('form');
+  if (form) {
+    form.addEventListener('submit', () => {
+      const btn = form.querySelector('button[type="submit"]');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `<span class="material-symbols-outlined text-[18px]">done</span> Guardado`;
+      btn.classList.add('bg-tertiary');
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.classList.remove('bg-tertiary');
+      }, 2000);
+    });
+  }
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-4px_16px_rgba(20,30,27,0.04)]" data-active-classes="text-primary font-medium"><div class="h-16 px-space-xs flex items-center justify-around"><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-space-xs text-on-surface-variant transition-colors hover:text-on-surface" data-path="athlete-sanctuary" href="#"><span class="material-symbols-outlined text-[22px]">spa</span><span class="font-label-sm text-label-sm tracking-normal">Espacio</span></a><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-space-xs text-on-surface-variant transition-colors hover:text-on-surface" data-path="breathing-grounding" href="#"><span class="material-symbols-outlined text-[22px]">all_inclusive</span><span class="font-label-sm text-label-sm tracking-normal">Centrado</span></a><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-space-xs text-on-surface-variant transition-colors hover:text-on-surface" data-path="ontological-reflections" href="#"><span class="material-symbols-outlined text-[22px]">edit_note</span><span class="font-label-sm text-label-sm tracking-normal">Bitácora</span></a><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-space-xs text-on-surface-variant transition-colors hover:text-on-surface" data-path="coaching-dialogues" href="#"><span class="material-symbols-outlined text-[22px]">forum</span><span class="font-label-sm text-label-sm tracking-normal">Diálogo</span></a></div></nav></body></html>

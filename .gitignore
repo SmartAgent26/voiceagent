@@ -1,0 +1,7 @@
+# Documento de producto local y confidencial: no publicar en GitHub.
+design.md
+agent-methodology.md
+.env.local
+.env*.local
+node_modules/
+.next/
