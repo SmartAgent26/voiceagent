@@ -5,8 +5,9 @@ type View = "athlete" | "coach" | "admin";
 
 const navigation = [
   { href: "/app", label: "Mi espacio", view: "athlete" },
-  { href: "/coach", label: "Coach", view: "coach" },
+  { href: "/admin/agent", label: "Configuración del agente", view: "coach" },
   { href: "/admin", label: "Administración", view: "admin" },
+  { href: "/admin/users", label: "Usuarios y suscripciones", view: "admin" },
 ];
 
 function Brand() {
@@ -26,7 +27,7 @@ function AthleteHome() {
 
 function CoachHome() {
   const athletes = [["Lucía Martínez", "Atletismo · 400 m vallas", "Gestión de la presión", "Pendiente"], ["Mateo Ruiz", "Ciclismo · Ruta", "Confianza en competencia", "Pendiente"], ["Sofía Herrera", "Natación · Estilo libre", "Equilibrio y descanso", "Atención"]];
-  return <><section className="welcome"><p className="eyebrow">Portal de coach</p><h1>Revisiones pendientes</h1><p>Conversaciones y contextos que requieren tu mirada.</p></section><section className="list-panel">{athletes.map(([name, sport, topic, status]) => <article className="athlete-row" key={name}><span className="avatar">{name.charAt(0)}</span><div><h2>{name}</h2><p>{sport}</p><small>Tema: {topic}</small></div><span className={`status-chip ${status === "Atención" ? "attention" : ""}`}>{status}</span><button className="icon-button" aria-label={`Ver a ${name}`}>→</button></article>)}</section></>;
+  return <><section className="welcome"><p className="eyebrow">Configuración del agente</p><h1>Coach ontológico deportivo</h1><p>Configuración visible para superadministración. Las claves de proveedor nunca se muestran aquí.</p></section><section className="panel"><p className="eyebrow">MODELO ACTIVO</p><h2>Gemini · entorno de pruebas</h2><p>Proveedor configurable mediante variables privadas del servidor. Próxima migración prevista: OpenAI para producción.</p></section><section className="panel"><p className="eyebrow">PROMPT OPERATIVO</p><h2>Metodología de conversación</h2><p>El agente prioriza preguntas abiertas, diferencia hechos de juicios, explora lenguaje, emoción y corporalidad, y evita consejos directos. Ante situaciones sensibles, interrumpe el coaching y deriva a recursos de apoyo.</p><button className="secondary-button">Ver prompt completo</button></section></>;
 }
 
 function AdminHome() {
@@ -36,5 +37,6 @@ function AdminHome() {
 export function AppShell({ view }: { view: View }) {
   if (view === "athlete") return <AthleteSpace />;
   const content = view === "coach" ? <CoachHome /> : <AdminHome />;
-  return <main className="app-frame"><aside className="sidebar"><Brand /><nav>{navigation.map((item) => <Link className={item.view === view ? "active" : ""} href={item.href} key={item.href}>{item.label}</Link>)}<Link href="/lab">Laboratorio del agente</Link></nav><div className="sidebar-footer"><span className="avatar">A</span><div><strong>Alex</strong><small>Vista de demostración</small></div></div></aside><div className="mobile-bar"><Brand /><Link href="/lab">Laboratorio</Link></div><section className="app-content">{content}</section></main>;
+  const visibleNavigation = view === "admin" ? navigation.filter(item => item.view !== "athlete") : navigation;
+  return <main className="app-frame"><aside className="sidebar"><Brand /><nav>{visibleNavigation.map((item) => <Link className={item.href === "/admin" && view === "admin" ? "active" : ""} href={item.href} key={item.href}>{item.label}</Link>)}<Link href="/lab">Laboratorio del agente</Link></nav><div className="sidebar-footer"><span className="avatar">A</span><div><strong>Superadmin</strong><small>Entorno protegido</small></div></div></aside><div className="mobile-bar"><Brand /><Link href="/lab">Laboratorio</Link></div><section className="app-content">{content}</section></main>;
 }

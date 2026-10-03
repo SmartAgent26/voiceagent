@@ -35,6 +35,17 @@ export function AccessScreen() {
     if (new URLSearchParams(window.location.search).get("mode") === "signup") setMode("signup");
   }, []);
 
+  useEffect(() => {
+    if (status !== "success") return;
+    const redirect = window.setTimeout(() => {
+      setMode("login");
+      setStatus("idle");
+      setMessage("");
+      window.history.replaceState(null, "", "/access");
+    }, 2600);
+    return () => window.clearTimeout(redirect);
+  }, [status]);
+
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus("loading");
@@ -59,7 +70,7 @@ export function AccessScreen() {
         return;
       }
       setStatus("success");
-      setMessage("Tu cuenta fue creada. Revisá tu correo para confirmarla y luego ingresá a Aksis.");
+      setMessage("Tu cuenta fue creada con éxito. Revisá tu correo para confirmarla y luego ingresá a Aksis.");
     } catch (error) {
       const rawMessage = error instanceof Error ? error.message : "";
       setStatus("error");
@@ -102,6 +113,7 @@ export function AccessScreen() {
         </section>
         <aside className="ontological-commitment"><b>♧</b><div><strong>Compromiso Ontológico</strong><p>Un espacio confidencial y de confianza para explorar tu potencial humano, emocional y atlético. Tus reflexiones y registros son 100% privados.</p></div></aside>
         <footer><a href="#">Código de Ética</a><i /> <a href="#">Privacidad Deportiva</a><i /> <a href="#">Soporte</a></footer>
+        {status === "success" && <div className="auth-success-toast" role="status"><span>✓</span><div><strong>Cuenta creada con éxito</strong><p>Te llevamos a Iniciar sesión…</p></div></div>}
       </div>
     </main>
   );

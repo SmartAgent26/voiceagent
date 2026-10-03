@@ -1,0 +1,12 @@
+create type public.account_status as enum ('active','suspended','pending');
+alter table public.profiles add column if not exists account_status public.account_status not null default 'active';
+create table public.subscription_plans (id uuid primary key default gen_random_uuid(), name text not null unique, monthly_blocks integer not null default 0, price_ars numeric(12,2), active boolean not null default true, created_at timestamptz not null default now());
+create table public.user_subscriptions (id uuid primary key default gen_random_uuid(), user_id uuid not null unique references public.profiles(id) on delete cascade, plan_id uuid references public.subscription_plans(id), status text not null default 'active', blocks_available integer not null default 0, blocks_used integer not null default 0, starts_at timestamptz not null default now(), expires_at timestamptz, updated_at timestamptz not null default now());
+create table public.billing_events (id uuid primary key default gen_random_uuid(), user_id uuid not null references public.profiles(id) on delete cascade, subscription_id uuid references public.user_subscriptions(id) on delete set null, event_type text not null, amount_ars numeric(12,2), status text not null default 'pending', occurred_at timestamptz not null default now(), metadata jsonb not null default '{}'::jsonb);
+create policy profiles_admin_update on public.profiles for update to authenticated using (public.is_superadmin()) with check (public.is_superadmin());
+alter table public.subscription_plans enable row level security; alter table public.user_subscriptions enable row level security; alter table public.billing_events enable row level security;
+create policy plans_admin on public.subscription_plans for all to authenticated using (public.is_superadmin()) with check (public.is_superadmin());
+create policy subscriptions_admin on public.user_subscriptions for all to authenticated using (public.is_superadmin()) with check (public.is_superadmin());
+create policy billing_admin on public.billing_events for all to authenticated using (public.is_superadmin()) with check (public.is_superadmin());
+grant select,insert,update,delete on public.subscription_plans,public.user_subscriptions,public.billing_events to authenticated;
+insert into public.subscription_plans(name,monthly_blocks,price_ars) values ('Prueba',2,0),('Esencial',4,null),('Proceso',8,null) on conflict(name) do nothing;

@@ -1,4 +1,6 @@
-const coachInstructions = `Sos Aksis, coach ontológico especializado en deportistas adultos. Tu trabajo es GUIAR, no explicar ni dar un discurso. Tu voz es la de un coach argentino joven, cercano, actual y profesional; no afirmes ser humano ni inventes experiencia personal.
+import { createServerSupabaseClient } from "@/lib/supabase/server";
+
+export const coachInstructions = `Sos Aksis, coach ontológico especializado en deportistas adultos. Tu trabajo es GUIAR, no explicar ni dar un discurso. Tu voz es la de un coach argentino joven, cercano, actual y profesional; no afirmes ser humano ni inventes experiencia personal.
 
 Entendés el contexto deportivo: entrenamientos, competencia, presión, error, lesión, recuperación, selección, equipo, expectativas, confianza y rendimiento. Escuchá el relato del atleta y elegí la pregunta que mejor lo ayude a observar lo que le está pasando.
 
@@ -39,9 +41,41 @@ type GeminiResponse = {
   };
 };
 
+type AgentConfiguration = { provider: "gemini" | "openai" | "openrouter"; model: string; system_prompt: string };
+
+async function getConfiguration(): Promise<AgentConfiguration> {
+  const fallback = { provider: "gemini" as const, model: process.env.GEMINI_MODEL || "", system_prompt: coachInstructions };
+  const client = createServerSupabaseClient();
+  if (!client) return fallback;
+  const { data } = await client.from("agent_configurations").select("provider,model,system_prompt").eq("is_active", true).maybeSingle();
+  if (!data || !["gemini", "openai", "openrouter"].includes(data.provider)) return fallback;
+  return data as AgentConfiguration;
+}
+
+type OpenAICompatibleResponse = { choices?: Array<{ message?: { content?: string } }>; usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number } };
+async function createOpenAICompatibleReply(configuration: AgentConfiguration, history: CoachTurn[]) {
+  const isOpenRouter = configuration.provider === "openrouter";
+  const apiKey = isOpenRouter ? process.env.OPENROUTER_API_KEY : process.env.OPENAI_API_KEY;
+  if (!apiKey) throw new Error(`No hay una clave privada configurada para ${configuration.provider}.`);
+  const response = await fetch(isOpenRouter ? "https://openrouter.ai/api/v1/chat/completions" : "https://api.openai.com/v1/chat/completions", {
+    method: "POST", signal: AbortSignal.timeout(30_000), headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({ model: configuration.model, messages: [{ role: "system", content: configuration.system_prompt }, ...history], max_tokens: 320 }),
+  });
+  if (!response.ok) throw new Error(`${configuration.provider} respondió con estado ${response.status}.`);
+  const result = await response.json() as OpenAICompatibleResponse;
+  return { content: result.choices?.[0]?.message?.content?.trim() || "", usage: { inputTokens: result.usage?.prompt_tokens ?? 0, outputTokens: result.usage?.completion_tokens ?? 0, totalTokens: result.usage?.total_tokens ?? 0 } };
+}
+
 export async function createCoachReply(history: CoachTurn[]) {
+  const configuration = await getConfiguration();
+  const { provider, model } = configuration;
+  if (provider !== "gemini") {
+    const result = await createOpenAICompatibleReply(configuration, history);
+    const isSensitiveReferral = /(107|911|0800-999-0091|\b135\b|salud mental|autolesi[oó]n|suicidio|emergencia)/i.test(result.content);
+    const hasCompleteQuestion = /\?\s*$/.test(result.content);
+    return { content: !result.content || (!isSensitiveReferral && !hasCompleteQuestion) ? "¿Qué aspecto de esta situación te gustaría mirar con más detalle?" : result.content, model, provider, usage: result.usage };
+  }
   const apiKey = process.env.GEMINI_API_KEY;
-  const model = process.env.GEMINI_MODEL;
   if (!apiKey) throw new Error("GEMINI_API_KEY no está configurada.");
   if (!model) throw new Error("GEMINI_MODEL no está configurado.");
 
@@ -55,7 +89,7 @@ export async function createCoachReply(history: CoachTurn[]) {
       },
       signal: AbortSignal.timeout(30_000),
       body: JSON.stringify({
-        system_instruction: { parts: [{ text: coachInstructions }] },
+        system_instruction: { parts: [{ text: configuration.system_prompt }] },
         contents: history.map((turn) => ({
           role: turn.role === "assistant" ? "model" : "user",
           parts: [{ text: turn.content }],
@@ -84,6 +118,7 @@ export async function createCoachReply(history: CoachTurn[]) {
       ? "¿Qué hiciste hoy que te gustaría poder repetir en tu próximo entrenamiento?"
       : content,
     model,
+    provider,
     usage: {
       inputTokens: result.usageMetadata?.promptTokenCount ?? 0,
       outputTokens: result.usageMetadata?.candidatesTokenCount ?? 0,

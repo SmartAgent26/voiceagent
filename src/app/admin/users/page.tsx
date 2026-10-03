@@ -1,0 +1,5 @@
+"use client";
+import { useEffect, useState } from "react";
+import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
+type User={id:string;display_name:string|null;role:string;created_at:string};
+export default function AdminUsers(){const [users,setUsers]=useState<User[]>([]);useEffect(()=>{const c=createBrowserSupabaseClient();void c.from('profiles').select('id,display_name,role,created_at').order('created_at',{ascending:false}).then(({data})=>setUsers((data||[]) as User[]))},[]);return <main className="admin-users"><header><span>ADMINISTRACIÓN · USUARIOS</span><h1>Usuarios y suscripciones</h1><p>Perfiles activos y el plan que tendrán asignado.</p></header><section><div className="admin-users-head"><b>Usuario</b><b>Rol</b><b>Suscripción</b><b>Alta</b></div>{users.map(user=><article key={user.id}><strong>{user.display_name||'Sin nombre'}</strong><span>{user.role}</span><span>Sin plan asignado</span><time>{new Date(user.created_at).toLocaleDateString('es-AR')}</time></article>)}{!users.length&&<p>Aún no hay usuarios visibles.</p>}</section></main>}
