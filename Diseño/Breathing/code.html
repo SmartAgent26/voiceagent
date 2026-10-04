@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-secondary-fixed": "#331012", "on-tertiary-container": "#003930", "on-surface-variant": "#3e4946", "on-primary-fixed-variant": "#005046", "surface-dim": "#d1ddd8", "secondary": "#815152", "on-secondary-fixed-variant": "#663a3b", "surface-container-high": "#dfebe6", "tertiary": "#186a5c", "on-primary-fixed": "#00201b", "on-error-container": "#93000a", "surface-container-lowest": "#ffffff", "primary-container": "#48a999", "secondary-container": "#febfbf", "on-tertiary-fixed": "#00201b", "error": "#ba1a1a", "on-error": "#ffffff", "inverse-surface": "#28332f", "primary-fixed-dim": "#78d7c6", "surface-container-low": "#ebf6f1", "on-secondary-container": "#7a4b4c", "surface-tint": "#006b5e", "secondary-fixed-dim": "#f5b7b7", "background": "#f1fcf7", "surface-container": "#e5f0eb", "tertiary-fixed": "#a6f1df", "outline-variant": "#bdc9c5", "error-container": "#ffdad6", "primary-fixed": "#95f4e2", "on-primary-container": "#003931", "on-tertiary": "#ffffff", "surface-variant": "#dae5e0", "outline": "#6e7a76", "tertiary-fixed-dim": "#8ad4c3", "surface-container-highest": "#dae5e0", "surface": "#f1fcf7", "on-primary": "#ffffff", "on-tertiary-fixed-variant": "#005045", "inverse-primary": "#78d7c6", "on-secondary": "#ffffff", "on-background": "#141e1b", "surface-bright": "#f1fcf7", "secondary-fixed": "#ffdad9", "on-surface": "#141e1b", "primary": "#006b5e", "inverse-on-surface": "#e8f3ee", "tertiary-container": "#5da797" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "margin-mobile": "1.25rem", "space-sm": "0.75rem", "gutter-mobile": "1rem", "space-lg": "2rem", "margin": "3rem", "space-md": "1.25rem", "space-xl": "3.5rem", "gutter": "1.5rem", "space-xs": "0.375rem" }, fontFamily: { "headline-lg-mobile": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "display-lg-mobile": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"] }, fontSize: { "headline-lg-mobile": ["26px", { "lineHeight": "34px", "fontWeight": "300" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "300" }], "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "600" }], "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "300" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "500" }], "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }], "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "300" }], "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "400" }], "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }], "display-lg-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "300" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.04em", "fontWeight": "500" }] } } } }</script><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#f1fcf7;color:#141e1b;-webkit-font-smoothing:antialiased;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style></head><body class="bg-surface font-body-md text-body-md flex flex-col min-h-screen text-on-surface"><header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] pt-safe"><div class="h-16 px-gutter-mobile flex items-center justify-between"><div class="flex items-center gap-space-xs"><img alt="minilogo.jpg" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UZ2_pPSiuy_jSwFBtthjYFwbZen8Sf50qfAQNTYm4vmu_oc6qW6_W_n4zsGqdYDrgGEyHoQah79HDObu70AkThn2Hqrq3KF96ja4jYW5ckCDrJaUgh1-VeTRMwLLzimFZfzuosefIjx1_fTlxiXX395cBIPxlnsnIJnFQrRBEo8-CObuNYQczdSg4IvGAX8Ey6IqPbfDOd2Kh6FsnqQZ7f4Mr2f7W-8EKi1cxmGR5Ax_cbrXphp0Er2j70CjYLtyz1PWmXqMUfrS8"/><div class="flex flex-col ml-1"><span class="font-label-sm text-label-sm text-primary tracking-wider uppercase">AKSIS</span><span class="font-headline-sm text-headline-sm text-on-surface leading-tight font-medium">Athlete Sanctuary</span></div></div><div class="flex items-center gap-space-xs"><a class="min-w-[44px] min-h-[44px] flex items-center justify-center p-1 rounded-full transition-transform active:scale-95" data-path="athlete-profile" href="#"><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[0_2px_8px_rgba(20,30,27,0.08)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxnBoEPQkZMjukznEc0GW3VmlbZ_4FsZIRFeWM5wQiC4-a4qiSHIjzHw83dJJZPCsQJrhjA_GLJSeyNXJSf5tPJHRPZOlP_C2Hpcgl4ap-n_efcGXsnf-9jU645MTjQA5i7cBgbDMIHxNr4Z41dXXt3o4otKX-euGS6SXO96khuoSygqoeKjtMDB5cORvbxva0ISGzLkvX9S41PF_Sr70ybYQTF5-AEFGsQRz-uQmqwuWHedLWaWB8OQ"/></a></div></div></header><main class="flex flex-col flex-1 w-full bg-surface pt-16 pb-24 px-gutter-mobile"><div class="flex flex-col w-full pb-10">
+<!-- Header Bar -->
+<div class="flex items-center justify-between py-2">
+<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-low text-on-surface-variant hover:text-primary transition-all active:scale-95 shadow-sm" data-path="athlete-sanctuary" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span class="font-label-sm text-label-sm tracking-wide">Mi Espacio</span>
+</a>
+<div class="flex items-center gap-1.5 bg-surface-container-high/80 px-2.5 py-1 rounded-full text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-sm text-label-sm tracking-widest uppercase text-tertiary">Bio-Sincronía</span>
+</div>
+</div>
+<!-- Screen Narrative Header -->
+<div class="mt-3 flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<img alt="AKSIS Emblem" class="w-5 h-5 object-contain opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQsCP-ICJ9P0TbBcTSmv8CnU5PK3FdT7MOyVfK_K7KgalEAQhegNU5quTs22w9vA-ORdY2_r8DXwRwiCDIv4vA4esjzt4RD1oMZj4s09cbxpMR6y26NkMXo2c1zTbRH7NVS2GiRuojZvBnALjmB_grsQJG5DgO0A0ECh9SvcUcEH5jXfKreZGybaJz0I_ufrhfHK-ANNMKH-wWyMPVk0bLlaZJORcyW2Nvwvyt7sAUjfv_5uIS2v2nyReW96BT3Er0bGo"/>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary">Somática &amp; Acción · Respiración Ontológica</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-light">Modulador de Respiración</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Alinea tu fisiología con la predisposición a la acción que necesitas activar en este quiebre.</p>
+</div>
+<!-- Intention Presets Carousel / Tabs -->
+<div class="mt-5 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">Seleccionar Intención del Cuerpo</span>
+<span class="font-label-sm text-label-sm text-primary font-medium" id="preset-count-badge">1 de 3</span>
+</div>
+<!-- Preset Selection Pills Horizontal Track -->
+<div class="flex gap-2 overflow-x-auto pb-1 scrollbar-none snap-x" id="preset-track">
+<!-- Preset 1 Button Card -->
+<button class="preset-btn flex-1 min-w-[210px] text-left p-3.5 rounded-xl transition-all duration-300 relative overflow-hidden bg-surface-container-lowest shadow-md ring-2 ring-primary/25" data-preset="p1" id="tab-btn-p1" onclick="selectPreset('p1')" type="button">
+<div class="flex items-center justify-between mb-1.5">
+<span class="material-symbols-outlined text-primary text-[20px]">crop_square</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-primary/10 text-primary font-semibold">4·4·4·4</span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface leading-tight font-medium text-[16px]">Centrado</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant text-[12px] mt-0.5 line-clamp-1">Respiración Cuadrada</div>
+<div class="mt-2.5 pt-2 flex items-center gap-1.5 text-tertiary">
+<span class="material-symbols-outlined text-[14px]">balance</span>
+<span class="font-label-sm text-label-sm text-[11px] truncate">Equilibrio &amp; Claridad</span>
+</div>
+</button>
+<!-- Preset 2 Button Card -->
+<button class="preset-btn flex-1 min-w-[210px] text-left p-3.5 rounded-xl transition-all duration-300 relative overflow-hidden bg-surface-container-low text-on-surface shadow-sm opacity-80" data-preset="p2" id="tab-btn-p2" onclick="selectPreset('p2')" type="button">
+<div class="flex items-center justify-between mb-1.5">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">bolt</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-semibold">4·2</span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface leading-tight font-medium text-[16px]">Resolución</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant text-[12px] mt-0.5 line-clamp-1">Enraizamiento Activo</div>
+<div class="mt-2.5 pt-2 flex items-center gap-1.5 text-secondary">
+<span class="material-symbols-outlined text-[14px]">fitness_center</span>
+<span class="font-label-sm text-label-sm text-[11px] truncate">Empuje &amp; Foco motriz</span>
+</div>
+</button>
+<!-- Preset 3 Button Card -->
+<button class="preset-btn flex-1 min-w-[210px] text-left p-3.5 rounded-xl transition-all duration-300 relative overflow-hidden bg-surface-container-low text-on-surface shadow-sm opacity-80" data-preset="p3" id="tab-btn-p3" onclick="selectPreset('p3')" type="button">
+<div class="flex items-center justify-between mb-1.5">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">filter_drama</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-tertiary-container/30 text-tertiary font-semibold">4·8</span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface leading-tight font-medium text-[16px]">Aceptación</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant text-[12px] mt-0.5 line-clamp-1">Soltar &amp; Descompresión</div>
+<div class="mt-2.5 pt-2 flex items-center gap-1.5 text-tertiary">
+<span class="material-symbols-outlined text-[14px]">air</span>
+<span class="font-label-sm text-label-sm text-[11px] truncate">Nervio Vago &amp; Paz</span>
+</div>
+</button>
+</div>
+<!-- Active Preset Context Detail Panel -->
+<div class="mt-1 p-3.5 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-1.5" id="preset-context-box">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5">psychology</span>
+<div>
+<span class="font-label-sm text-label-sm text-primary font-medium tracking-wide uppercase">Propósito Ontológico:</span>
+<p class="font-body-sm text-body-sm text-on-surface leading-relaxed mt-0.5" id="preset-desc">
+            Busca neutralidad y presencia antes de una conversación difícil o toma de decisión estratégica.
+          </p>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 mt-1 bg-surface-container-low/50 px-2.5 py-1.5 rounded-lg">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Ciclo fisiológico:</span>
+<span class="font-label-sm text-label-sm text-tertiary font-semibold" id="preset-cadence">Inhala 4s · Retén 4s · Exhala 4s · Pausa 4s</span>
+</div>
+</div>
+</div>
+<!-- Central Somatic Breathing Orb Visualization -->
+<div class="mt-5 relative w-full flex flex-col items-center justify-center py-6 px-4 rounded-2xl bg-surface-container-lowest shadow-sm overflow-hidden min-h-[340px]">
+<!-- Ambient Organic Background Glows -->
+<div class="absolute -top-12 -left-12 w-48 h-48 rounded-full bg-primary-fixed-dim/20 blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-12 -right-12 w-48 h-48 rounded-full bg-secondary-container/25 blur-3xl pointer-events-none"></div>
+<!-- Visualizer Canvas Wrap -->
+<div class="relative w-64 h-64 flex items-center justify-center">
+<!-- Outer Pulsing Halo -->
+<div class="absolute w-56 h-56 rounded-full bg-primary/10 transition-all duration-700 ease-in-out scale-90 opacity-40" id="orb-outer-halo"></div>
+<!-- Mid Soft Glass Ring -->
+<div class="absolute w-48 h-48 rounded-full bg-gradient-to-tr from-primary-container/25 to-tertiary-fixed/40 transition-all duration-700 ease-in-out scale-95 shadow-[0_4px_24px_rgba(72,169,153,0.18)]" id="orb-mid-ring"></div>
+<!-- Center Dynamic Breath Core Orb -->
+<div class="relative w-36 h-36 rounded-full bg-gradient-to-br from-primary via-primary-container to-tertiary-container shadow-[0_8px_30px_rgba(0,107,94,0.30)] flex flex-col items-center justify-center text-on-primary transition-all duration-500 transform scale-90" id="orb-core">
+<span class="font-headline-sm text-headline-sm text-on-primary font-medium tracking-wide" id="breath-phase-text">Listo</span>
+<span class="font-display-lg-mobile text-display-lg-mobile font-light text-on-primary leading-none mt-1" id="breath-countdown">4s</span>
+<div class="flex items-center gap-1 mt-1 opacity-80">
+<span class="w-1.5 h-1.5 rounded-full bg-on-primary/90"></span>
+<span class="font-label-sm text-label-sm text-on-primary/90" id="breath-progress-dots">Paso 1/4</span>
+</div>
+</div>
+</div>
+<!-- Somatic Guidance Cue below orb -->
+<div class="mt-4 flex items-center justify-center gap-2 max-w-[280px] text-center">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">self_improvement</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant font-light italic" id="somatic-cue">
+        Siente la expansión suave del diafragma y la relajación de hombros.
+      </p>
+</div>
+<!-- Cycle Counter Pill -->
+<div class="mt-3 flex items-center gap-3">
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-[12px] font-medium">
+<span class="material-symbols-outlined text-[15px] text-primary">sync</span>
+<span id="cycle-tracker">Ciclo 1 de 15</span>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-low text-tertiary text-[12px]">
+<span class="material-symbols-outlined text-[15px]">favorite</span>
+<span id="hrv-indicator">VFC Óptima</span>
+</div>
+</div>
+</div>
+<!-- Session Settings & Duration Pill Selector -->
+<div class="mt-4 bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px]">timer</span>
+<span class="font-label-lg text-label-lg font-medium">Duración de Práctica</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="total-time-estimate">Meta: 5 minutos</span>
+</div>
+<!-- Duration Segmented Selectors -->
+<div class="grid grid-cols-3 gap-2">
+<button class="duration-btn py-2 px-1 text-center rounded-lg bg-surface-container-low text-on-surface-variant text-label-sm font-medium hover:text-on-surface transition-all" onclick="setDuration(2, this)" type="button">
+        2 min <span class="block text-[10px] font-light opacity-80">Rápida</span>
+</button>
+<button class="duration-btn py-2 px-1 text-center rounded-lg bg-primary text-on-primary text-label-sm font-semibold shadow-sm transition-all" onclick="setDuration(5, this)" type="button">
+        5 min <span class="block text-[10px] font-light text-on-primary/80">Recomendado</span>
+</button>
+<button class="duration-btn py-2 px-1 text-center rounded-lg bg-surface-container-low text-on-surface-variant text-label-sm font-medium hover:text-on-surface transition-all" onclick="setDuration(10, this)" type="button">
+        10 min <span class="block text-[10px] font-light opacity-80">Inmersiva</span>
+</button>
+</div>
+<!-- Sensory Toggles (Haptic & Bowl Bell) -->
+<div class="flex items-center justify-between pt-2 mt-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">vibration</span>
+<span class="font-body-sm text-body-sm text-on-surface">Guía háptica sutil</span>
+</div>
+<button class="w-10 h-6 bg-primary rounded-full relative p-0.5 transition-colors duration-200 focus:outline-none" id="toggle-haptic" onclick="toggleSwitch('toggle-haptic')" type="button">
+<span class="toggle-circle block w-5 h-5 bg-surface-container-lowest rounded-full shadow-sm transform translate-x-4 transition-transform duration-200"></span>
+</button>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">notifications_active</span>
+<span class="font-body-sm text-body-sm text-on-surface">Campana tibetana suave</span>
+</div>
+<button class="w-10 h-6 bg-primary rounded-full relative p-0.5 transition-colors duration-200 focus:outline-none" id="toggle-bell" onclick="toggleSwitch('toggle-bell')" type="button">
+<span class="toggle-circle block w-5 h-5 bg-surface-container-lowest rounded-full shadow-sm transform translate-x-4 transition-transform duration-200"></span>
+</button>
+</div>
+</div>
+<!-- Primary Playback & Action Controls -->
+<div class="mt-5 flex flex-col gap-3">
+<!-- Big Primary Start / Pause Pill -->
+<button class="w-full py-4 px-6 rounded-full bg-primary hover:bg-tertiary text-on-primary font-headline-sm text-headline-sm font-medium flex items-center justify-center gap-3 shadow-[0_8px_20px_rgba(72,169,153,0.28)] transition-all active:scale-[0.98]" id="main-breath-btn" onclick="toggleBreathwork()" type="button">
+<span class="material-symbols-outlined text-[24px]" id="main-btn-icon">play_arrow</span>
+<span id="main-btn-label">Iniciar práctica</span>
+</button>
+<!-- Secondary Reflect Action in Logbook -->
+<a class="w-full py-3 px-4 rounded-full bg-surface-container-lowest hover:bg-surface-container-low text-on-surface font-label-lg text-label-lg font-medium flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98]" data-path="ontological-reflections" href="#">
+<span class="material-symbols-outlined text-secondary text-[20px]">edit_note</span>
+<span>Registrar impacto en Bitácora</span>
+</a>
+</div>
+<!-- Ontological Somatic Axiom Quote Footer -->
+<div class="mt-6 p-4 rounded-xl bg-surface-container-low/70 flex items-start gap-3">
+<div class="w-1 h-12 bg-secondary-container rounded-full shrink-0"></div>
+<div class="flex flex-col">
+<p class="font-body-sm text-body-sm text-on-surface italic leading-relaxed">
+        “El ritmo de tu respiración es la puerta de acceso al diseño consciente de tus estados emocionales y tu predisposición al logro.”
+      </p>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium mt-1 uppercase tracking-wide">
+        — Axioma Somático AKSIS
+      </span>
+</div>
+</div>
+</div>
+<!-- Vanilla Interactive Breathing Controller -->
+<script>
+  // Presets definition
+  const BREATH_PRESETS = {
+    p1: {
+      name: "Centrado",
+      subtitle: "Respiración Cuadrada",
+      desc: "Busca neutralidad y presencia antes de una conversación difícil o toma de decisión estratégica.",
+      cadenceText: "Inhala 4s · Retén 4s · Exhala 4s · Pausa 4s",
+      phases: [
+        { name: "Inhala", sec: 4, cue: "Expande el abdomen con calma y soltura.", scale: 1.25, haloScale: 1.35, color: "from-primary via-primary-container to-tertiary-container" },
+        { name: "Sostén", sec: 4, cue: "Guarda la energía sin tensar la garganta.", scale: 1.25, haloScale: 1.4, color: "from-tertiary via-primary to-primary-container" },
+        { name: "Exhala", sec: 4, cue: "Suelta el aire como un suspiro suave y continuo.", scale: 0.85, haloScale: 0.95, color: "from-primary-container to-tertiary-fixed-dim" },
+        { name: "Pausa en vacío", sec: 4, cue: "Habita el silencio previo a la nueva acción.", scale: 0.82, haloScale: 0.90, color: "from-surface-dim to-tertiary-container" }
+      ]
+    },
+    p2: {
+      name: "Resolución / Enraizamiento",
+      subtitle: "Inhala 4 · Exhala 2",
+      desc: "Activa el tono simpático óptimo para salir de la parálisis, el letargo o la postergación.",
+      cadenceText: "Inhala 4s · Exhala 2s (enérgica y diafragmática)",
+      phases: [
+        { name: "Inhala", sec: 4, cue: "Llena tu capacidad torácica con potencia y vigor.", scale: 1.30, haloScale: 1.45, color: "from-primary via-secondary to-primary-container" },
+        { name: "Exhala con fuerza", sec: 2, cue: "Empuje motriz: vaciado dinámico y directo.", scale: 0.80, haloScale: 0.88, color: "from-secondary to-primary-container" }
+      ]
+    },
+    p3: {
+      name: "Aceptación / Soltar",
+      subtitle: "Inhala 4 · Exhala 8",
+      desc: "Estimulación del nervio vago para soltar la necesidad de control o desactivar resentimiento somático.",
+      cadenceText: "Inhala 4s · Exhala 8s lento, sedoso y profundo",
+      phases: [
+        { name: "Inhala", sec: 4, cue: "Acepta el estado presente sin juzgarlo.", scale: 1.15, haloScale: 1.25, color: "from-primary via-primary-container to-tertiary" },
+        { name: "Exhala largo", sec: 8, cue: "Descompresión profunda del sistema nervioso.", scale: 0.78, haloScale: 0.85, color: "from-primary-container to-surface-container-high" }
+      ]
+    }
+  };
+
+  let activePresetKey = 'p1';
+  let isRunning = false;
+  let currentPhaseIndex = 0;
+  let remainingSecondsInPhase = 4;
+  let timerInterval = null;
+  let completedCycles = 0;
+  let targetMinutes = 5;
+
+  function selectPreset(presetKey) {
+    if (isRunning) toggleBreathwork();
+    activePresetKey = presetKey;
+    const p = BREATH_PRESETS[presetKey];
+
+    // Update active tab buttons visual state
+    ['p1', 'p2', 'p3'].forEach(k => {
+      const btn = document.getElementById('tab-btn-' + k);
+      if (!btn) return;
+      if (k === presetKey) {
+        btn.classList.remove('bg-surface-container-low', 'opacity-80');
+        btn.classList.add('bg-surface-container-lowest', 'ring-2', 'ring-primary/25', 'shadow-md');
+      } else {
+        btn.classList.remove('bg-surface-container-lowest', 'ring-2', 'ring-primary/25', 'shadow-md');
+        btn.classList.add('bg-surface-container-low', 'opacity-80');
+      }
+    });
+
+    // Update descriptions
+    document.getElementById('preset-desc').textContent = p.desc;
+    document.getElementById('preset-cadence').textContent = p.cadenceText;
+    const badgeMap = { p1: '1 de 3', p2: '2 de 3', p3: '3 de 3' };
+    document.getElementById('preset-count-badge').textContent = badgeMap[presetKey] || '1 de 3';
+
+    // Reset visualizer to phase 0 preview
+    resetVisualizer();
+  }
+
+  function resetVisualizer() {
+    currentPhaseIndex = 0;
+    const phase = BREATH_PRESETS[activePresetKey].phases[0];
+    remainingSecondsInPhase = phase.sec;
+    
+    document.getElementById('breath-phase-text').textContent = phase.name;
+    document.getElementById('breath-countdown').textContent = phase.sec + 's';
+    document.getElementById('somatic-cue').textContent = phase.cue;
+    document.getElementById('breath-progress-dots').textContent = 'Paso 1/' + BREATH_PRESETS[activePresetKey].phases.length;
+
+    const orb = document.getElementById('orb-core');
+    const outerHalo = document.getElementById('orb-outer-halo');
+    const midRing = document.getElementById('orb-mid-ring');
+
+    orb.style.transform = 'scale(0.9)';
+    outerHalo.style.transform = 'scale(0.9)';
+    midRing.style.transform = 'scale(0.95)';
+  }
+
+  function toggleBreathwork() {
+    const btnIcon = document.getElementById('main-btn-icon');
+    const btnLabel = document.getElementById('main-btn-label');
+    const mainBtn = document.getElementById('main-breath-btn');
+
+    if (!isRunning) {
+      // Start session
+      isRunning = true;
+      btnIcon.textContent = 'pause';
+      btnLabel.textContent = 'Pausar práctica';
+      mainBtn.classList.remove('bg-primary');
+      mainBtn.classList.add('bg-tertiary');
+      runStep();
+      timerInterval = setInterval(tick, 1000);
+    } else {
+      // Pause session
+      isRunning = false;
+      btnIcon.textContent = 'play_arrow';
+      btnLabel.textContent = 'Reanudar práctica';
+      mainBtn.classList.remove('bg-tertiary');
+      mainBtn.classList.add('bg-primary');
+      clearInterval(timerInterval);
+    }
+  }
+
+  function runStep() {
+    const phases = BREATH_PRESETS[activePresetKey].phases;
+    const phase = phases[currentPhaseIndex];
+
+    document.getElementById('breath-phase-text').textContent = phase.name;
+    document.getElementById('breath-countdown').textContent = remainingSecondsInPhase + 's';
+    document.getElementById('somatic-cue').textContent = phase.cue;
+    document.getElementById('breath-progress-dots').textContent = 'Paso ' + (currentPhaseIndex + 1) + '/' + phases.length;
+
+    const orb = document.getElementById('orb-core');
+    const outerHalo = document.getElementById('orb-outer-halo');
+    const midRing = document.getElementById('orb-mid-ring');
+
+    // Dynamic Orb Scale & Fluid Animation
+    orb.style.transitionDuration = (phase.sec * 0.9) + 's';
+    outerHalo.style.transitionDuration = (phase.sec * 0.9) + 's';
+    midRing.style.transitionDuration = (phase.sec * 0.9) + 's';
+
+    orb.style.transform = 'scale(' + phase.scale + ')';
+    outerHalo.style.transform = 'scale(' + phase.haloScale + ')';
+    midRing.style.transform = 'scale(' + (phase.scale * 1.05) + ')';
+  }
+
+  function tick() {
+    remainingSecondsInPhase--;
+    if (remainingSecondsInPhase <= 0) {
+      const phases = BREATH_PRESETS[activePresetKey].phases;
+      currentPhaseIndex++;
+      if (currentPhaseIndex >= phases.length) {
+        currentPhaseIndex = 0;
+        completedCycles++;
+        const targetCycles = Math.round((targetMinutes * 60) / phases.reduce((a, b) => a + b.sec, 0));
+        document.getElementById('cycle-tracker').textContent = 'Ciclo ' + (completedCycles + 1) + ' de ' + targetCycles;
+      }
+      remainingSecondsInPhase = phases[currentPhaseIndex].sec;
+      runStep();
+    } else {
+      document.getElementById('breath-countdown').textContent = remainingSecondsInPhase + 's';
+    }
+  }
+
+  function setDuration(minutes, el) {
+    targetMinutes = minutes;
+    document.querySelectorAll('.duration-btn').forEach(btn => {
+      btn.classList.remove('bg-primary', 'text-on-primary', 'font-semibold', 'shadow-sm');
+      btn.classList.add('bg-surface-container-low', 'text-on-surface-variant', 'font-medium');
+      const sub = btn.querySelector('span');
+      if (sub) {
+        sub.classList.remove('text-on-primary/80');
+        sub.classList.add('opacity-80');
+      }
+    });
+
+    el.classList.remove('bg-surface-container-low', 'text-on-surface-variant', 'font-medium');
+    el.classList.add('bg-primary', 'text-on-primary', 'font-semibold', 'shadow-sm');
+    const subActive = el.querySelector('span');
+    if (subActive) {
+      subActive.classList.add('text-on-primary/80');
+      subActive.classList.remove('opacity-80');
+    }
+
+    document.getElementById('total-time-estimate').textContent = 'Meta: ' + minutes + ' minutos';
+    const phases = BREATH_PRESETS[activePresetKey].phases;
+    const cycleLength = phases.reduce((acc, curr) => acc + curr.sec, 0);
+    const targetCycles = Math.round((minutes * 60) / cycleLength);
+    document.getElementById('cycle-tracker').textContent = 'Ciclo ' + (completedCycles + 1) + ' de ' + targetCycles;
+  }
+
+  function toggleSwitch(id) {
+    const btn = document.getElementById(id);
+    const circle = btn.querySelector('.toggle-circle');
+    const isChecked = btn.classList.contains('bg-primary');
+
+    if (isChecked) {
+      btn.classList.remove('bg-primary');
+      btn.classList.add('bg-outline-variant');
+      circle.classList.remove('translate-x-4');
+      circle.classList.add('translate-x-0');
+    } else {
+      btn.classList.remove('bg-outline-variant');
+      btn.classList.add('bg-primary');
+      circle.classList.remove('translate-x-0');
+      circle.classList.add('translate-x-4');
+    }
+  }
+
+  // Initialize visualizer with preset 1 state
+  resetVisualizer();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-4px_16px_rgba(20,30,27,0.04)]" data-active-classes="text-primary font-medium"><div class="h-16 px-space-xs flex items-center justify-around"><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-space-xs text-on-surface-variant transition-colors hover:text-on-surface" data-path="athlete-sanctuary" href="#"><span class="material-symbols-outlined text-[22px]">spa</span><span class="font-label-sm text-label-sm tracking-normal">Espacio</span></a><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-space-xs text-on-surface-variant transition-colors hover:text-on-surface" data-path="breathing-grounding" href="#"><span class="material-symbols-outlined text-[22px]">all_inclusive</span><span class="font-label-sm text-label-sm tracking-normal">Centrado</span></a><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-space-xs text-on-surface-variant transition-colors hover:text-on-surface" data-path="ontological-reflections" href="#"><span class="material-symbols-outlined text-[22px]">edit_note</span><span class="font-label-sm text-label-sm tracking-normal">Bitácora</span></a><a class="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-space-xs text-on-surface-variant transition-colors hover:text-on-surface" data-path="coaching-dialogues" href="#"><span class="material-symbols-outlined text-[22px]">forum</span><span class="font-label-sm text-label-sm tracking-normal">Diálogo</span></a></div></nav></body></html>

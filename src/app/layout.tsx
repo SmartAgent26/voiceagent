@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AksisToastProvider } from "@/components/aksis-toast";
 
 export const metadata: Metadata = {
   title: "Aksis | Coaching deportivo",
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="es-AR">
-      <body>{children}</body>
+      <body><AksisToastProvider>{children}</AksisToastProvider></body>
     </html>
   );
 }

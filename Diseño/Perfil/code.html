@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-secondary-fixed": "#331012", "primary": "#006b5e", "tertiary-fixed-dim": "#8ad4c3", "surface-variant": "#dae5e0", "primary-fixed": "#95f4e2", "inverse-primary": "#78d7c6", "error": "#ba1a1a", "tertiary-fixed": "#a6f1df", "surface-container-highest": "#dae5e0", "on-error-container": "#93000a", "on-primary-container": "#003931", "on-primary-fixed-variant": "#005046", "surface-tint": "#006b5e", "on-secondary-fixed-variant": "#663a3b", "surface-container-lowest": "#ffffff", "background": "#f1fcf7", "on-primary-fixed": "#00201b", "on-error": "#ffffff", "secondary": "#815152", "inverse-on-surface": "#e8f3ee", "surface-container": "#e5f0eb", "on-background": "#141e1b", "tertiary-container": "#5da797", "surface": "#f1fcf7", "on-surface": "#141e1b", "on-secondary-container": "#7a4b4c", "on-tertiary-fixed": "#00201b", "inverse-surface": "#28332f", "tertiary": "#186a5c", "outline-variant": "#bdc9c5", "secondary-fixed-dim": "#f5b7b7", "on-surface-variant": "#3e4946", "surface-dim": "#d1ddd8", "secondary-container": "#febfbf", "error-container": "#ffdad6", "secondary-fixed": "#ffdad9", "surface-container-low": "#ebf6f1", "on-tertiary": "#ffffff", "surface-container-high": "#dfebe6", "primary-container": "#48a999", "primary-fixed-dim": "#78d7c6", "on-primary": "#ffffff", "surface-bright": "#f1fcf7", "on-tertiary-container": "#003930", "on-tertiary-fixed-variant": "#005045", "on-secondary": "#ffffff", "outline": "#6e7a76" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "gutter-mobile": "1rem", "margin": "3rem", "space-lg": "2rem", "space-md": "1.25rem", "space-xl": "3.5rem", "gutter": "1.5rem", "margin-mobile": "1.25rem", "space-sm": "0.75rem", "space-xs": "0.375rem" }, fontFamily: { "body-lg": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "display-lg-mobile": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"] }, fontSize: { "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "300" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.04em", "fontWeight": "500" }], "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }], "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "300" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "300" }], "display-lg-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "300" }], "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "600" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "500" }], "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "400" }], "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "fontWeight": "300" }] } } } };</script></head><body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe"><div class="h-16 px-gutter-mobile flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-xs min-w-0"><button aria-label="Volver a Mi Espacio" class="flex items-center gap-1 min-w-[44px] min-h-[44px] px-space-xs rounded-full text-on-surface hover:text-primary transition-colors focus:outline-none" onclick="history.back()"><span class="material-symbols-outlined text-[20px]">arrow_back_ios_new</span><span class="font-label-lg text-label-lg hidden xs:inline">Volver a Mi Espacio</span></button><img alt="minilogo.jpg" class="h-8 w-auto object-contain shrink-0 ml-1" src="https://lh3.googleusercontent.com/aida/AEtjO1UZ2_pPSiuy_jSwFBtthjYFwbZen8Sf50qfAQNTYm4vmu_oc6qW6_W_n4zsGqdYDrgGEyHoQah79HDObu70AkThn2Hqrq3KF96ja4jYW5ckCDrJaUgh1-VeTRMwLLzimFZfzuosefIjx1_fTlxiXX395cBIPxlnsnIJnFQrRBEo8-CObuNYQczdSg4IvGAX8Ey6IqPbfDOd2Kh6FsnqQZ7f4Mr2f7W-8EKi1cxmGR5Ax_cbrXphp0Er2j70CjYLtyz1PWmXqMUfrS8"/><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant/70 hidden sm:inline">AKSIS</span></div><div class="flex-1 text-center px-1 truncate"><h1 class="font-headline-sm text-headline-sm text-on-surface tracking-tight truncate">Editar Perfil</h1></div><div class="flex items-center justify-end shrink-0"><div class="p-0.5 rounded-full ring-2 ring-primary/20"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1XyJdWhrt77ClWujbk_Yy_hBid3DJ7teIKQC3NQAQJi0l217_aEHRWeTEG50g67TRZ1qqQarTvVNQiDGCfdjIqwc3IipY9-qiY8Id-yfmA7-t9wChPysLlkd6Hb0IQ_ij7aIt3MweFg7PrFGcQbjP1YFjyIBhrT9lJELXoOCUk2hQfGNGkliMa0oFjzx2mevoO6V6uq-CwMRARlbx2DFUPOYXotbUZeW2r3MwoINmXHwDWUga9dHhGKL4G1"/></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-safe bg-surface min-h-screen"><div class="flex flex-col w-full px-gutter-mobile pb-space-xl">
+<!-- Subtle Ambient Glow -->
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 w-72 h-72 bg-primary-fixed/20 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<!-- Intro Context Tagline -->
+<div class="pt-space-sm pb-space-xs text-center">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+      Identidad &amp; Somática
+    </span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 max-w-xs mx-auto">
+      Armonizá tus datos personales, enfoque deportivo y presencia en tu espacio de coaching.
+    </p>
+</div>
+<!-- SECTION 1: Avatar & Interactive Crop Visualizer -->
+<section class="mt-space-md flex flex-col items-center">
+<div class="relative group cursor-pointer" id="avatarTrigger" onclick="toggleCropModal(true)">
+<div class="relative p-1 rounded-full bg-surface-container shadow-md">
+<img alt="Sofía Valenzuela" class="w-28 h-28 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1XyJdWhrt77ClWujbk_Yy_hBid3DJ7teIKQC3NQAQJi0l217_aEHRWeTEG50g67TRZ1qqQarTvVNQiDGCfdjIqwc3IipY9-qiY8Id-yfmA7-t9wChPysLlkd6Hb0IQ_ij7aIt3MweFg7PrFGcQbjP1YFjyIBhrT9lJELXoOCUk2hQfGNGkliMa0oFjzx2mevoO6V6uq-CwMRARlbx2DFUPOYXotbUZeW2r3MwoINmXHwDWUga9dHhGKL4G1"/>
+<button aria-label="Cambiar foto de perfil" class="absolute bottom-1 right-1 w-9 h-9 rounded-full bg-primary text-on-primary shadow-md flex items-center justify-center transition-transform active:scale-95" type="button">
+<span class="material-symbols-outlined text-[18px]">photo_camera</span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-2 mt-3">
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-high text-primary font-label-lg text-label-lg shadow-sm hover:bg-surface-variant transition-colors" onclick="toggleCropModal(true)" type="button">
+<span class="material-symbols-outlined text-[16px]">crop_free</span>
+<span>Ajustar encuadre</span>
+</button>
+<button class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[15px]">sync</span>
+<span>Subir nueva</span>
+</button>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant/70 mt-1.5">JPG, PNG. Recomendado 1:1 para encuadre somático</span>
+<!-- Interactive Crop Studio Card -->
+<div class="w-full mt-space-sm bg-surface-container-lowest rounded-xl p-space-md shadow-sm transition-all duration-300" id="cropStudioModal">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">filter_center_focus</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Herramienta de Recorte</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm">Enfoque 1:1</span>
+</div>
+<!-- Crop Viewport with Rule of Thirds and Circular Overlay -->
+<div class="relative w-full aspect-square max-w-[280px] mx-auto my-space-sm bg-inverse-surface rounded-xl overflow-hidden shadow-inner flex items-center justify-center">
+<!-- Live Image to transform -->
+<img alt="Sofía Valenzuela" class="absolute w-full h-full object-cover select-none transition-transform duration-100 ease-out" id="cropImageTarget" src="https://lh3.googleusercontent.com/aida/AEtjO1XyJdWhrt77ClWujbk_Yy_hBid3DJ7teIKQC3NQAQJi0l217_aEHRWeTEG50g67TRZ1qqQarTvVNQiDGCfdjIqwc3IipY9-qiY8Id-yfmA7-t9wChPysLlkd6Hb0IQ_ij7aIt3MweFg7PrFGcQbjP1YFjyIBhrT9lJELXoOCUk2hQfGNGkliMa0oFjzx2mevoO6V6uq-CwMRARlbx2DFUPOYXotbUZeW2r3MwoINmXHwDWUga9dHhGKL4G1" style="transform: scale(1.1) rotate(0deg);"/>
+<!-- Rule of thirds grid lines -->
+<div class="absolute inset-0 pointer-events-none grid grid-cols-3 grid-rows-3 opacity-25">
+<div class="bg-surface-container-lowest/15"></div>
+<div class="bg-surface-container-lowest/15"></div>
+<div class="bg-surface-container-lowest/15"></div>
+<div class="bg-surface-container-lowest/15"></div>
+<div class="bg-surface-container-lowest/15"></div>
+<div class="bg-surface-container-lowest/15"></div>
+<div class="bg-surface-container-lowest/15"></div>
+<div class="bg-surface-container-lowest/15"></div>
+<div class="bg-surface-container-lowest/15"></div>
+</div>
+<!-- Somatic Circular Focus Mask -->
+<div class="absolute inset-2 rounded-full shadow-[0_0_0_9999px_rgba(20,30,27,0.55)] pointer-events-none"></div>
+<!-- Subtle Crosshairs -->
+<div class="absolute w-3 h-3 text-surface-container-lowest/60 flex items-center justify-center pointer-events-none">
+<span class="material-symbols-outlined text-[14px]">add</span>
+</div>
+</div>
+<!-- Crop Controls -->
+<div class="space-y-space-xs mt-space-sm">
+<div class="flex items-center gap-3 px-space-xs">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">zoom_out</span>
+<input class="w-full accent-primary h-1.5 bg-surface-container rounded-lg cursor-pointer" id="zoomSlider" max="2" min="1" oninput="handleZoomChange(this.value)" step="0.05" type="range" value="1.1"/>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">zoom_in</span>
+</div>
+<div class="flex items-center justify-between pt-space-xs gap-2">
+<button class="flex-1 py-2 px-3 rounded-full bg-surface-container text-on-surface font-label-lg text-label-lg flex items-center justify-center gap-1.5 hover:bg-surface-container-high transition-colors" onclick="handleRotate()" type="button">
+<span class="material-symbols-outlined text-[18px]">rotate_90_degrees_cw</span>
+<span>Girar 90°</span>
+</button>
+<button class="flex-1 py-2 px-3 rounded-full bg-primary-container text-on-primary-container font-label-lg text-label-lg flex items-center justify-center gap-1.5 hover:bg-primary hover:text-on-primary transition-colors shadow-sm" onclick="applyCropNotification()" type="button">
+<span class="material-symbols-outlined text-[18px]">check</span>
+<span>Aplicar</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 2: Datos Personales -->
+<section class="mt-space-lg">
+<div class="flex items-center justify-between mb-space-xs">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[20px]">person_outline</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Datos Personales</h2>
+</div>
+<span class="font-label-sm text-label-sm text-tertiary">Verificado</span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-sm">
+<!-- Nombre y Apellido -->
+<div>
+<label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-1.5" for="fullName">Nombre y Apellido</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant/60 text-[18px]">badge</span>
+<input class="w-full bg-surface-container-low rounded-lg pl-10 pr-3.5 py-2.5 font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:bg-surface-container-lowest focus:shadow-sm" id="fullName" type="text" value="Sofía Valenzuela"/>
+</div>
+</div>
+<!-- Correo Electrónico -->
+<div>
+<label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-1.5" for="emailAddr">Dirección de correo</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant/60 text-[18px]">mail</span>
+<input class="w-full bg-surface-container-low rounded-lg pl-10 pr-3.5 py-2.5 font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:bg-surface-container-lowest focus:shadow-sm" id="emailAddr" type="email" value="sofia.valenzuela@atletismo.com"/>
+</div>
+</div>
+<!-- Teléfono con Selector de Prefijo -->
+<div>
+<label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-1.5" for="phoneNum">Teléfono Móvil</label>
+<div class="flex gap-2">
+<div class="relative flex items-center shrink-0">
+<select aria-label="Prefijo país" class="h-full bg-surface-container-low rounded-lg pl-3 pr-6 py-2.5 font-label-lg text-label-lg text-on-surface appearance-none focus:outline-none cursor-pointer">
+<option value="+54">🇦🇷 +54</option>
+<option value="+56">🇨🇱 +56</option>
+<option value="+55">🇧🇷 +55</option>
+<option value="+34">🇪🇸 +34</option>
+<option value="+57">🇨🇴 +57</option>
+</select>
+<span class="material-symbols-outlined absolute right-1.5 pointer-events-none text-[16px] text-on-surface-variant">expand_more</span>
+</div>
+<div class="relative flex-1 flex items-center">
+<input class="w-full bg-surface-container-low rounded-lg px-3.5 py-2.5 font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:shadow-sm" id="phoneNum" type="tel" value="9 11 4589-2310"/>
+</div>
+</div>
+</div>
+<!-- Fecha de Nacimiento -->
+<div>
+<label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-1.5" for="birthDate">Fecha de nacimiento</label>
+<div class="flex items-center gap-2">
+<div class="relative flex-1 flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant/60 text-[18px]">calendar_today</span>
+<input class="w-full bg-surface-container-low rounded-lg pl-10 pr-3.5 py-2.5 font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:shadow-sm" id="birthDate" type="text" value="14 / 08 / 1998"/>
+</div>
+<div class="shrink-0 px-3 py-2.5 rounded-lg bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">hourglass_bottom</span>
+<span>25 años</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 3: Trayectoria y Categoría Deportiva -->
+<section class="mt-space-lg">
+<div class="flex items-center gap-1.5 mb-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">directions_run</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Trayectoria y Categoría</h2>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-md">
+<!-- Disciplina / Deporte -->
+<div>
+<label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-1.5" for="sportCategory">Deporte &amp; Especialidad</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant/60 text-[18px]">sprint</span>
+<input class="w-full bg-surface-container-low rounded-lg pl-10 pr-3.5 py-2.5 font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:shadow-sm" id="sportCategory" type="text" value="Atletismo · Salto en alto / Velocidad"/>
+</div>
+</div>
+<!-- Segmented Category Chips -->
+<div>
+<label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-2">Nivel / Momento Atlético</label>
+<div class="grid grid-cols-2 gap-2" id="categoryChips">
+<!-- Option 1: Profesional (Active) -->
+<button class="chip-item flex items-center justify-between p-3 rounded-lg bg-primary-container text-on-primary-container text-left shadow-sm transition-all" onclick="selectChip(this)" type="button">
+<div class="flex flex-col min-w-0">
+<span class="font-label-lg text-label-lg font-medium">Profesional</span>
+<span class="font-label-sm text-label-sm opacity-80 truncate">Alta competencia</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-on-primary-container">check_circle</span>
+</button>
+<!-- Option 2: Formación -->
+<button class="chip-item flex items-center justify-between p-3 rounded-lg bg-surface-container-low text-on-surface text-left hover:bg-surface-container transition-all" onclick="selectChip(this)" type="button">
+<div class="flex flex-col min-w-0">
+<span class="font-label-lg text-label-lg font-medium">Formación</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate">Juvenil y desarrollo</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant/40">radio_button_unchecked</span>
+</button>
+<!-- Option 3: Master & Senior -->
+<button class="chip-item flex items-center justify-between p-3 rounded-lg bg-surface-container-low text-on-surface text-left hover:bg-surface-container transition-all" onclick="selectChip(this)" type="button">
+<div class="flex flex-col min-w-0">
+<span class="font-label-lg text-label-lg font-medium">Master &amp; Senior</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate">Trayectoria viva</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant/40">radio_button_unchecked</span>
+</button>
+<!-- Option 4: Coach / Familia -->
+<button class="chip-item flex items-center justify-between p-3 rounded-lg bg-surface-container-low text-on-surface text-left hover:bg-surface-container transition-all" onclick="selectChip(this)" type="button">
+<div class="flex flex-col min-w-0">
+<span class="font-label-lg text-label-lg font-medium">Coach / Red</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate">Acompañamiento</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant/40">radio_button_unchecked</span>
+</button>
+</div>
+</div>
+<!-- Ontological Prompt Note -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-start gap-2.5">
+<span class="material-symbols-outlined text-tertiary text-[18px] shrink-0 mt-0.5">spa</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Esta categoría adapta el lenguaje de reflexión, las metáforas somáticas y el ritmo de las sesiones con tu coach Meli.
+        </p>
+</div>
+</div>
+</section>
+<!-- SECTION 4: Suscripción y Membresía Actual -->
+<section class="mt-space-lg">
+<div class="flex items-center justify-between mb-space-xs">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[20px]">workspace_premium</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Suscripción Actual</h2>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+        Activa · Mensual
+      </span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden">
+<!-- Calm pastel peach/mint ambient aura -->
+<div class="absolute -right-6 -bottom-6 w-32 h-32 bg-secondary-container/40 rounded-full blur-2xl pointer-events-none"></div>
+<div class="relative">
+<div class="flex items-start justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-tertiary uppercase tracking-wider font-semibold">Membresía Integral</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mt-0.5">AKSIS Sanctuary Pro</h3>
+</div>
+<span class="material-symbols-outlined text-primary text-[28px]">all_inclusive</span>
+</div>
+<div class="mt-3 space-y-2">
+<div class="flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">psychology_alt</span>
+<span>Sesiones ilimitadas con Coach Meli (IA somática)</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">self_improvement</span>
+<span>2 sesiones mensuales con Coach Ontológico humano</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">edit_note</span>
+<span>Bitácora somática sin límite y análisis holístico</span>
+</div>
+</div>
+<!-- Renewal bar -->
+<div class="mt-space-sm pt-space-xs flex items-center justify-between bg-surface-container-low px-3 py-2 rounded-lg">
+<div class="flex items-center gap-1.5 text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant/70">event_repeat</span>
+<span>Próxima renovación:</span>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">18 de Junio, 2024</span>
+</div>
+<!-- Actions -->
+<div class="mt-space-sm grid grid-cols-2 gap-2">
+<button class="py-2 px-3 rounded-full bg-surface-container text-on-surface font-label-lg text-label-lg text-center hover:bg-surface-container-high transition-colors" type="button">
+            Gestionar plan
+          </button>
+<button class="py-2 px-3 rounded-full bg-surface-container-low text-on-surface-variant font-label-lg text-label-lg text-center hover:bg-surface-container transition-colors" type="button">
+            Ver facturas
+          </button>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 5: Botones de Acción al pie -->
+<section class="mt-space-xl space-y-space-sm text-center">
+<button class="w-full py-3.5 px-space-lg rounded-full bg-primary text-on-primary font-label-lg text-label-lg shadow-md hover:bg-on-primary-fixed-variant transition-all active:scale-[0.99] flex items-center justify-center gap-2" onclick="handleSaveProfile()" type="button">
+<span class="material-symbols-outlined text-[20px]">save</span>
+<span>Guardar cambios</span>
+</button>
+<button class="w-full py-2.5 px-space-lg rounded-full bg-surface-container text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high transition-colors" onclick="history.back()" type="button">
+      Descartar cambios
+    </button>
+<div class="pt-space-xs">
+<button class="font-label-sm text-label-sm text-secondary hover:text-on-secondary-fixed-variant transition-colors underline underline-offset-4 opacity-80" type="button">
+        Darse de baja o pausar cuenta temporalmente
+      </button>
+</div>
+</section>
+<!-- Floating Toast Feedback -->
+<div class="fixed bottom-6 inset-x-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none" id="statusToast">
+<div class="bg-inverse-surface text-inverse-on-surface px-4 py-3 rounded-full shadow-xl flex items-center justify-between gap-3 max-w-sm mx-auto">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-primary-fixed text-[20px]">check_circle</span>
+<span class="font-body-sm text-body-sm truncate" id="toastMsg">Cambios guardados con éxito</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Listo</span>
+</div>
+</div>
+</div>
+<script>
+  let currentRotation = 0;
+  let currentZoom = 1.1;
+
+  function handleZoomChange(val) {
+    currentZoom = val;
+    applyImageTransform();
+  }
+
+  function handleRotate() {
+    currentRotation = (currentRotation + 90) % 360;
+    applyImageTransform();
+  }
+
+  function applyImageTransform() {
+    const img = document.getElementById('cropImageTarget');
+    if (img) {
+      img.style.transform = `scale(${currentZoom}) rotate(${currentRotation}deg)`;
+    }
+  }
+
+  function toggleCropModal(show) {
+    const modal = document.getElementById('cropStudioModal');
+    if (modal) {
+      if (show) {
+        modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }
+
+  function applyCropNotification() {
+    showToast('Encuadre somático actualizado correctamente');
+  }
+
+  function handleSaveProfile() {
+    showToast('Perfil actualizado con serenidad');
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById('statusToast');
+    const toastMsg = document.getElementById('toastMsg');
+    if (toast && toastMsg) {
+      toastMsg.textContent = msg;
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 2600);
+    }
+  }
+
+  function selectChip(btn) {
+    const container = document.getElementById('categoryChips');
+    if (!container) return;
+    const allButtons = container.querySelectorAll('.chip-item');
+
+    allButtons.forEach(b => {
+      b.classList.remove('bg-primary-container', 'text-on-primary-container', 'shadow-sm');
+      b.classList.add('bg-surface-container-low', 'text-on-surface');
+      const icon = b.querySelector('.material-symbols-outlined');
+      if (icon) {
+        icon.textContent = 'radio_button_unchecked';
+        icon.classList.remove('text-on-primary-container');
+        icon.classList.add('text-on-surface-variant/40');
+      }
+    });
+
+    btn.classList.remove('bg-surface-container-low', 'text-on-surface');
+    btn.classList.add('bg-primary-container', 'text-on-primary-container', 'shadow-sm');
+    const activeIcon = btn.querySelector('.material-symbols-outlined');
+    if (activeIcon) {
+      activeIcon.textContent = 'check_circle';
+      activeIcon.classList.remove('text-on-surface-variant/40');
+      activeIcon.classList.add('text-on-primary-container');
+    }
+  }
+</script></main></body></html>

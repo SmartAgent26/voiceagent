@@ -1,59 +1,37 @@
 "use client";
 
-import Link from "next/link";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, PointerEvent, useEffect, useRef, useState } from "react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 
 type Turn = { role: "user" | "assistant"; content: string };
+type Recognition = { continuous:boolean; interimResults:boolean; lang:string; start:()=>void; stop:()=>void; onresult:((event:{resultIndex:number;results:ArrayLike<{0:{transcript:string};isFinal:boolean}>})=>void)|null;onend:(()=>void)|null;onerror:(()=>void)|null };
+type RecognitionCtor = new()=>Recognition;
+
+function RichChatMessage({ content }: { content: string }) {
+  const inline = (text: string) => text.split(/(\*\*[^*]+\*\*)/g).map((part, index) => part.startsWith("**") && part.endsWith("**")
+    ? <strong key={index}>{part.slice(2, -2)}</strong>
+    : part);
+  return <>{content.split(/\n\s*\n/).filter(Boolean).map((block, index) => {
+    const lines = block.split("\n").filter(Boolean);
+    const bulletList = lines.every((line) => /^[-•]\s+/.test(line));
+    const numberedList = lines.every((line) => /^\d+[.)]\s+/.test(line));
+    if (bulletList) return <ul key={index}>{lines.map((line, item) => <li key={item}>{inline(line.replace(/^[-•]\s+/, ""))}</li>)}</ul>;
+    if (numberedList) return <ol key={index}>{lines.map((line, item) => <li key={item}>{inline(line.replace(/^\d+[.)]\s+/, ""))}</li>)}</ol>;
+    return <p key={index}>{lines.map((line, item) => <span key={item}>{item > 0 && <br />}{inline(line)}</span>)}</p>;
+  })}</>;
+}
 
 export function AthleteChat() {
-  const [history, setHistory] = useState<Turn[]>([]);
-  const [coachName, setCoachName] = useState("Aksis");
-  const [draft, setDraft] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
-
-  useEffect(() => { const client = createBrowserSupabaseClient(); void (async () => { const { data: auth } = await client.auth.getUser(); if (!auth.user) return location.assign("/access"); const { data } = await client.from("athlete_profiles").select("preferred_coach_name").eq("user_id", auth.user.id).single(); const name = data?.preferred_coach_name?.trim() || "Aksis"; setCoachName(name); setHistory([{ role: "assistant", content: "¿Cómo llega hoy tu mente y tu cuerpo a este espacio?" }]); })(); }, []);
-
-  async function send(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const content = draft.trim();
-    if (!content || status === "loading") return;
-    const next = [...history, { role: "user" as const, content }];
-    setHistory(next);
-    setDraft("");
-    setStatus("loading");
-    try {
-      const response = await fetch("/api/coach", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ history: next }),
-      });
-      const payload = await response.json();
-      if (!response.ok) throw new Error(payload.error);
-      setHistory([...next, { role: "assistant", content: payload.content }]);
-      setStatus("idle");
-    } catch {
-      setStatus("error");
-    }
-  }
-
-  return <main className="athlete-chat-page">
-    <header className="chat-header">
-      <div className="chat-brand"><span className="axis-mark" /><div><h1>Aksis</h1><small>Coaching ontológico deportivo</small></div></div>
-      <div className="chat-actions"><span className="chat-timer">◷ Sesión activa</span><Link className="chat-close" href="/app" aria-label="Cerrar diálogo y volver a Mi Espacio">×</Link></div>
-    </header>
-    <section className="chat-conversation" aria-live="polite">
-      {history.map((turn, index) => <article className={`chat-turn ${turn.role}`} key={`${turn.role}-${index}`}>
-        {turn.role === "assistant" && <div className="chat-author"><span>◌</span><b>{coachName}</b></div>}
-        <div className="chat-bubble">{turn.content}</div>
-      </article>)}
-      {status === "loading" && <p className="chat-thinking">Aksis está preparando una pregunta…</p>}
-      {status === "error" && <p className="chat-error">No pudimos continuar la conversación. Intentá nuevamente.</p>}
-    </section>
-    <form className="chat-input" onSubmit={send}>
-      <button type="button" aria-label="Adjuntar nota" disabled>⌇</button>
-      <input value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Escribí un mensaje…" maxLength={4000} />
-      <button className="chat-send" type="submit" aria-label="Enviar mensaje" disabled={status === "loading"}>↗</button>
-    </form>
-  </main>;
+  const [history,setHistory]=useState<Turn[]>([]);const [coachName,setCoachName]=useState("Aksis");const [draft,setDraft]=useState("");const [status,setStatus]=useState<"idle"|"loading"|"error">("idle");const [sessionId,setSessionId]=useState<string|null>(null);const [blocks,setBlocks]=useState<number|null>(null);const [outOfBlocks,setOutOfBlocks]=useState(false);const [listening,setListening]=useState(false);const [voiceEnabled,setVoiceEnabled]=useState(true);const voiceEnabledRef=useRef(true);const recognitionRef=useRef<Recognition|null>(null);const transcriptRef=useRef("");const sendOnEndRef=useRef(false);
+  function say(text:string){if(!voiceEnabledRef.current||!window.speechSynthesis)return;window.speechSynthesis.cancel();const message=new SpeechSynthesisUtterance(text.replace(/[*#•-]/g," "));message.lang="es-AR";message.rate=.86;message.pitch=.9;const voice=window.speechSynthesis.getVoices().find(item=>item.lang.toLowerCase().startsWith("es"));if(voice)message.voice=voice;window.speechSynthesis.speak(message)}
+  function toggleVoice(){const next=!voiceEnabledRef.current;voiceEnabledRef.current=next;if(!next)window.speechSynthesis?.cancel();setVoiceEnabled(next)}
+  async function initialize(){const client=createBrowserSupabaseClient();const {data:auth}=await client.auth.getUser();if(!auth.user)return location.assign("/access");const [{data:athleteProfile},{data:profile},{data:subscription}]=await Promise.all([client.from("athlete_profiles").select("preferred_coach_name").eq("user_id",auth.user.id).single(),client.from("profiles").select("display_name").eq("id",auth.user.id).maybeSingle(),client.from("user_subscriptions").select("blocks_available").eq("user_id",auth.user.id).maybeSingle()]);const balance=subscription?.blocks_available||0;const athleteName=profile?.display_name?.trim().split(/\s+/)[0]||"";setBlocks(balance);setCoachName(athleteProfile?.preferred_coach_name?.trim()||"Aksis");if(!balance){setOutOfBlocks(true);return}const {data:session}=await client.from("coaching_sessions").insert({athlete_id:auth.user.id,status:"active",title:"Sesión con Aksis"}).select("id").single();setSessionId(session?.id||null);setHistory([{role:"assistant",content:`Hola${athleteName?`, ${athleteName}`:""}. Qué bueno encontrarnos. ¿Cómo estás hoy?`}])}
+  useEffect(()=>{void initialize();return()=>{recognitionRef.current?.stop();window.speechSynthesis?.cancel()}},[]);
+  async function sendMessage(content:string){if(!content.trim()||status==="loading"||outOfBlocks)return;const next=[...history,{role:"user" as const,content:content.trim()}];setHistory(next);setDraft("");setStatus("loading");try{const {data:auth}=await createBrowserSupabaseClient().auth.getSession();const response=await fetch("/api/coach",{method:"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${auth.session?.access_token||""}`},body:JSON.stringify({history:next,sessionId:sessionId||undefined})});const payload=await response.json();if(response.status===402){setOutOfBlocks(true);setBlocks(payload.blocksAvailable||0);setStatus("idle");return}if(!response.ok)throw new Error(payload.error);setHistory([...next,{role:"assistant",content:payload.content}]);say(payload.content);if(typeof payload.blocksRemaining==="number")setBlocks(payload.blocksRemaining);setStatus("idle")}catch{setStatus("error")}}
+  function send(event:FormEvent<HTMLFormElement>){event.preventDefault();void sendMessage(draft)}
+  function startVoice(event:PointerEvent<HTMLButtonElement>){event.preventDefault();if(status==="loading")return;const speechWindow=window as Window&typeof globalThis&{SpeechRecognition?:RecognitionCtor;webkitSpeechRecognition?:RecognitionCtor};const Ctor=speechWindow.SpeechRecognition||speechWindow.webkitSpeechRecognition;if(!Ctor){setStatus("error");return}transcriptRef.current="";sendOnEndRef.current=false;const recognition=new Ctor();recognition.lang="es-AR";recognition.continuous=false;recognition.interimResults=true;recognition.onresult=result=>{let finalText="",interimText="";for(let i=0;i<result.results.length;i+=1){if(result.results[i].isFinal)finalText+=result.results[i][0].transcript;else interimText+=result.results[i][0].transcript}transcriptRef.current=`${finalText}${interimText}`.trim();setDraft(transcriptRef.current)};recognition.onend=()=>{recognitionRef.current=null;setListening(false);if(sendOnEndRef.current&&transcriptRef.current.trim())void sendMessage(transcriptRef.current);sendOnEndRef.current=false};recognition.onerror=()=>{sendOnEndRef.current=false;setListening(false);setStatus("error")};recognitionRef.current=recognition;setListening(true);recognition.start()}
+  function sendVoice(){sendOnEndRef.current=true;recognitionRef.current?.stop();if(!recognitionRef.current){const text=transcriptRef.current.trim()||draft.trim();if(text)void sendMessage(text)}}
+  async function buyBlocks(){const {data:auth}=await createBrowserSupabaseClient().auth.getSession();const response=await fetch("/api/coach/purchase-blocks",{method:"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${auth.session?.access_token||""}`},body:JSON.stringify({blocks:2})});const payload=await response.json();if(!response.ok){setStatus("error");return}setBlocks(payload.blocksRemaining);setOutOfBlocks(false);setHistory([]);setSessionId(null);await initialize()}
+  async function closeSession(){window.speechSynthesis?.cancel();if(sessionId){const {data:auth}=await createBrowserSupabaseClient().auth.getSession();await fetch("/api/coach/close",{method:"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${auth.session?.access_token||""}`},body:JSON.stringify({sessionId})})}location.assign("/app")}
+  return <main className="athlete-chat-page"><header className="chat-header"><div className="chat-brand"><span className="axis-mark"/><div><h1>Aksis</h1><small>Coaching ontológico deportivo</small></div></div><div className="chat-actions"><span className="chat-timer">{blocks===null?"Preparando…":`${blocks} bloque${blocks===1?"":"s"} disponible${blocks===1?"":"s"}`}</span><button className={`chat-speech-toggle ${voiceEnabled?"active":""}`} type="button" onClick={toggleVoice} aria-label={voiceEnabled?"Desactivar lectura en voz alta":"Activar lectura en voz alta"} title={voiceEnabled?"Desactivar lectura en voz alta":"Activar lectura en voz alta"}>{voiceEnabled?"🔊":"🔇"}</button><button className="chat-close" type="button" onClick={closeSession} disabled={status==="loading"} aria-label="Cerrar diálogo y volver a Mi Espacio">×</button></div></header>{outOfBlocks?<section className="chat-blocks-empty"><span>◌</span><h2>Tu saldo de sesiones llegó a cero</h2><p>Cada bloque equivale a 15 minutos de conversación. Podés sumar bloques ahora; esta es una compra simulada para el MVP.</p><button onClick={()=>void buyBlocks()}>Sumar 2 bloques simulados</button><small>No se realizará ningún cobro.</small></section>:<><section className="chat-conversation" aria-live="polite">{history.map((turn,index)=><article className={`chat-turn ${turn.role}`} key={`${turn.role}-${index}`}>{turn.role==="assistant"&&<div className="chat-author"><span>◌</span><b>{coachName}</b></div>}<div className="chat-bubble"><RichChatMessage content={turn.content}/></div></article>)}{status==="loading"&&<p className="chat-thinking">Aksis está preparando una pregunta…</p>}{status==="error"&&<p className="chat-error">No pudimos continuar la conversación o acceder al micrófono.</p>}</section><form className="chat-input" onSubmit={send}><button className={`chat-mic ${listening?"listening":""}`} type="button" aria-label="Mantené presionado para hablar" onPointerDown={startVoice} onPointerUp={sendVoice} onPointerCancel={sendVoice} onPointerLeave={()=>{if(listening)sendVoice()}}><span>🎙</span></button><input value={draft} onChange={event=>setDraft(event.target.value)} placeholder={listening?"Te escucho… soltá para enviar":"Escribí un mensaje…"} maxLength={4000}/><button className="chat-send" type="submit" aria-label="Enviar mensaje" disabled={status==="loading"||!draft.trim()}>Enviar <b>→</b></button></form></>}</main>;
 }

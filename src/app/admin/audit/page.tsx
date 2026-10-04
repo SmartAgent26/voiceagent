@@ -1,5 +1,54 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useEffect, useMemo, useState } from "react";
+import { useAksisToast } from "@/components/aksis-toast";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
-type Event={id:number;action:string;entity_type:string;created_at:string;metadata:Record<string,unknown>};
-export default function Audit(){const [events,setEvents]=useState<Event[]>([]);useEffect(()=>{const c=createBrowserSupabaseClient();void c.from('audit_log').select('id,action,entity_type,created_at,metadata').order('created_at',{ascending:false}).limit(100).then(({data})=>setEvents((data||[]) as Event[]))},[]);return <main className="admin-view"><span>OPERACIÓN · AUDITORÍA</span><h1>Registro de actividad</h1><p>Eventos administrativos y del sistema. Los errores de proveedor y de agente se incorporarán aquí al conectar el monitoreo.</p><section className="audit-list">{events.map(event=><article key={event.id}><strong>{event.action}</strong><span>{event.entity_type}</span><time>{new Date(event.created_at).toLocaleString('es-AR')}</time></article>)}{!events.length&&<article><strong>Sin eventos todavía</strong><span>El registro empezará a poblarse con acciones de administración, acceso y cambios de configuración.</span></article>}</section></main>}
+
+type AuditEvent = { id: number; actor_id: string | null; action: string; entity_type: string; entity_id: string | null; metadata: Record<string, unknown>; created_at: string };
+type Actor = { id: string; display_name: string | null };
+
+function severity(event: AuditEvent) {
+  const content = `${event.action} ${event.entity_type}`.toLowerCase();
+  if (content.includes("error") || content.includes("failed") || content.includes("suspend")) return "error";
+  if (content.includes("warning") || content.includes("cancel")) return "warning";
+  if (content.includes("login") || content.includes("logout")) return "success";
+  return "info";
+}
+function detail(event: AuditEvent) {
+  const values = Object.entries(event.metadata || {}).slice(0, 2).map(([key, value]) => `${key}: ${String(value)}`);
+  return values.join(" · ") || "Evento registrado por Aksis";
+}
+
+export default function Audit() {
+  const [events, setEvents] = useState<AuditEvent[]>([]);
+  const [actors, setActors] = useState<Record<string, string>>({});
+  const [query, setQuery] = useState(""); const [filter, setFilter] = useState("all"); const [module, setModule] = useState("all");
+  const [loading, setLoading] = useState(true); const { showToast } = useAksisToast();
+
+  async function load() {
+    setLoading(true); const client = createBrowserSupabaseClient();
+    const { data, error } = await client.from("audit_log").select("id,actor_id,action,entity_type,entity_id,metadata,created_at").order("created_at", { ascending: false }).limit(200);
+    if (error) { showToast("No pudimos cargar el registro de auditoría.", "error"); setLoading(false); return; }
+    const rows = (data || []) as AuditEvent[]; setEvents(rows);
+    const ids = [...new Set(rows.map((row) => row.actor_id).filter(Boolean))] as string[];
+    if (ids.length) { const { data: profiles } = await client.from("profiles").select("id,display_name").in("id", ids); setActors(Object.fromEntries(((profiles || []) as Actor[]).map((profile) => [profile.id, profile.display_name || "Usuario Aksis"]))); }
+    setLoading(false);
+  }
+  useEffect(() => { void load(); }, []);
+
+  const modules = [...new Set(events.map((event) => event.entity_type))];
+  const rows = useMemo(() => events.filter((event) => {
+    const text = `${event.action} ${event.entity_type} ${actors[event.actor_id || ""] || ""} ${detail(event)}`.toLowerCase();
+    return (!query || text.includes(query.toLowerCase())) && (filter === "all" || severity(event) === filter) && (module === "all" || event.entity_type === module);
+  }), [actors, events, filter, module, query]);
+  const today = events.filter((event) => new Date(event.created_at).toDateString() === new Date().toDateString()).length;
+  const alarms = events.filter((event) => severity(event) === "error" || severity(event) === "warning").length;
+  const adminSessions = events.filter((event) => event.action === "admin_login").length;
+
+  function exportCsv() {
+    const content = [["Fecha UTC", "Severidad", "Evento", "Usuario", "Módulo", "Detalle"], ...rows.map((event) => [new Date(event.created_at).toISOString(), severity(event), event.action, actors[event.actor_id || ""] || "Sistema", event.entity_type, detail(event)])].map((line) => line.map((cell) => `"${cell.replaceAll('"', '""')}"`).join(",")).join("\n");
+    const url = URL.createObjectURL(new Blob([content], { type: "text/csv;charset=utf-8" })); const anchor = document.createElement("a"); anchor.href = url; anchor.download = "aksis-auditoria.csv"; anchor.click(); URL.revokeObjectURL(url); showToast("Exportación preparada en formato CSV.", "success");
+  }
+
+  return <main className="admin-view audit-view"><div className="audit-heading"><div><span>OPERACIÓN <i /> AUDITORÍA</span><h1>Registro de actividad</h1><p>Eventos administrativos y del sistema, con trazabilidad de accesos y operaciones.</p></div><div className="audit-heading-actions"><button className="secondary-button" onClick={() => void load()}>↻ Actualizar</button><button className="admin-primary-action" onClick={exportCsv}>⇩ Exportar CSV</button></div></div><section className="audit-metrics"><article><small>EVENTOS REGISTRADOS</small><strong>{loading ? "—" : events.length.toLocaleString("es-AR")}</strong><p>Últimos 200 eventos consultados.</p></article><article className={alarms ? "audit-warning" : ""}><small>ALARMAS DETECTADAS</small><strong>{loading ? "—" : alarms}</strong><p>{alarms ? "Revisá eventos de advertencia o error." : "No hay alertas registradas."}</p></article><article><small>SESIONES ADMIN</small><strong>{loading ? "—" : adminSessions}</strong><p>Ingresos administrativos registrados.</p></article><article><small>EVENTOS HOY</small><strong>{loading ? "—" : today}</strong><p>Datos según la zona horaria local.</p></article></section><section className="audit-filters"><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar por usuario, evento o detalle…" /><select value={filter} onChange={(event) => setFilter(event.target.value)}><option value="all">Todas las severidades</option><option value="success">Éxito / acceso</option><option value="warning">Advertencia</option><option value="error">Error</option><option value="info">Información</option></select><select value={module} onChange={(event) => setModule(event.target.value)}><option value="all">Módulo: todos</option>{modules.map((item) => <option key={item} value={item}>{item}</option>)}</select><button aria-label="Limpiar filtros" className="audit-clear" onClick={() => { setQuery(""); setFilter("all"); setModule("all"); }}>×</button></section><section className="audit-table"><header><span>Registros de seguridad y operación <b>{rows.length} visibles</b></span><small>Fechas en UTC</small></header><div className="audit-columns"><span>FECHA Y HORA</span><span>SEVERIDAD</span><span>EVENTO / ACCIÓN</span><span>USUARIO / SUJETO</span><span>MÓDULO</span><span>DETALLE</span></div>{rows.map((event) => <article key={event.id}><time><b>{new Date(event.created_at).toLocaleDateString("es-AR")} {new Date(event.created_at).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</b><small>UTC {new Date(event.created_at).toISOString().slice(11, 16)}</small></time><span className={`audit-severity ${severity(event)}`}>● {severity(event) === "success" ? "Éxito" : severity(event) === "warning" ? "Advertencia" : severity(event) === "error" ? "Error" : "Info"}</span><div><b>{event.action}</b><small>{detail(event)}</small></div><div><b>{event.actor_id ? actors[event.actor_id] || "Usuario Aksis" : "Sistema / Aksis"}</b><small>{event.actor_id ? "Actor autenticado" : "Proceso interno"}</small></div><code>{event.entity_type}</code><small className="audit-detail">{event.entity_id || "Sin entidad específica"}</small></article>)}{!loading && !rows.length && <div className="audit-empty">No encontramos eventos con estos filtros.</div>}</section></main>;
+}

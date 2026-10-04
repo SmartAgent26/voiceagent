@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import logo from "../../imagenes/logo.jpg";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
+import { useAksisToast } from "@/components/aksis-toast";
 
 const roles = [
   ["juvenil", "Atleta Juvenil", "Desarrollo y base"],
@@ -30,6 +31,7 @@ export function AccessScreen() {
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [role, setRole] = useState("juvenil");
+  const { showToast } = useAksisToast();
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("mode") === "signup") setMode("signup");
@@ -45,6 +47,11 @@ export function AccessScreen() {
     }, 2600);
     return () => window.clearTimeout(redirect);
   }, [status]);
+
+  useEffect(() => {
+    if (!message || status === "idle" || status === "loading") return;
+    showToast(message, status === "error" ? "error" : "success");
+  }, [message, showToast, status]);
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -107,13 +114,10 @@ export function AccessScreen() {
             <label>CORREO ELECTRÓNICO INSTITUCIONAL O PERSONAL<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="atleta@aksis.pro" required /></label>
             <label className="password-label">CONTRASEÑA{mode === "login" && <a href="#">¿Olvidaste tu contraseña?</a>}<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="••••••••••••" minLength={8} required /></label>
             <button className="auth-submit" disabled={status === "loading"}>{status === "loading" ? "Un momento…" : mode === "login" ? "Ingresar a mi Espacio" : "Comenzar mi Proceso"} <b>→</b></button>
-            {status === "error" && <p className="auth-error">{message}</p>}
-            {status === "success" && <p className="auth-success">{message}</p>}
           </form>
         </section>
         <aside className="ontological-commitment"><b>♧</b><div><strong>Compromiso Ontológico</strong><p>Un espacio confidencial y de confianza para explorar tu potencial humano, emocional y atlético. Tus reflexiones y registros son 100% privados.</p></div></aside>
         <footer><a href="#">Código de Ética</a><i /> <a href="#">Privacidad Deportiva</a><i /> <a href="#">Soporte</a></footer>
-        {status === "success" && <div className="auth-success-toast" role="status"><span>✓</span><div><strong>Cuenta creada con éxito</strong><p>Te llevamos a Iniciar sesión…</p></div></div>}
       </div>
     </main>
   );
