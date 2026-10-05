@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { getAuthenticatedAdminId } from "@/lib/agent/auth";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { createInvitationCode, hashInvitationCode } from "@/lib/security/invitation-codes";
-import { enforceRateLimit, rateLimitHeaders } from "@/lib/security/request-guards";
+import { enforceRateLimit, parseJsonBody, rateLimitHeaders, RequestBodyTooLargeError } from "@/lib/security/request-guards";
 import { logOperationalEvent } from "@/lib/security/logger";
 
 async function adminRequest(request: Request) {
@@ -18,9 +19,63 @@ export async function GET(request: Request) {
   const access = await adminRequest(request);
   if (!access) return NextResponse.json({ error: "No autorizado." }, { status: 401 });
   if (access.limited) return NextResponse.json({ error: "Demasiadas consultas. Intentá nuevamente en un momento." }, { status: 429, headers: rateLimitHeaders(access.limited) });
-  const { data, error } = await access.client.from("invitation_codes").select("id,expires_at,used_at,used_by,created_at").order("created_at", { ascending: false }).limit(30);
+  const { data, error } = await access.client.from("invitation_codes").select("id,expires_at,used_at,used_by,created_at,disabled_at").order("created_at", { ascending: false }).limit(50);
   if (error) return NextResponse.json({ error: "No pudimos cargar las invitaciones." }, { status: 500 });
   return NextResponse.json({ invitations: data || [] });
+}
+
+const invitationActionSchema = z.discriminatedUnion("action", [
+  z.object({ action: z.literal("disable"), id: z.string().uuid() }),
+  z.object({ action: z.literal("extend"), id: z.string().uuid(), hours: z.number().int().min(24).max(24 * 30).refine((hours) => hours % 24 === 0) }),
+]);
+
+export async function PATCH(request: Request) {
+  const requestId = request.headers.get("x-request-id") || crypto.randomUUID();
+  const access = await adminRequest(request);
+  if (!access) return NextResponse.json({ error: "No autorizado." }, { status: 401 });
+  if (access.limited) return NextResponse.json({ error: "Demasiadas modificaciones. Intentá nuevamente en un momento." }, { status: 429, headers: rateLimitHeaders(access.limited) });
+
+  try {
+    const action = await parseJsonBody(request, invitationActionSchema, 2_048);
+    if (action.action === "disable") {
+      const { data, error } = await access.client
+        .from("invitation_codes")
+        .update({ disabled_at: new Date().toISOString(), disabled_by: access.adminId })
+        .eq("id", action.id)
+        .is("used_at", null)
+        .is("disabled_at", null)
+        .select("id")
+        .maybeSingle();
+      if (error || !data) throw error || new Error("InvitationCannotBeDisabled");
+      await logOperationalEvent("invitation_disabled", { requestId, route: "/api/admin/invitations", outcome: "info", status: 200 });
+      return NextResponse.json({ ok: true });
+    }
+
+    const { data: current, error: currentError } = await access.client
+      .from("invitation_codes")
+      .select("id,expires_at,used_at,disabled_at")
+      .eq("id", action.id)
+      .maybeSingle();
+    if (currentError || !current || current.used_at || current.disabled_at) throw currentError || new Error("InvitationCannotBeExtended");
+
+    const baseTime = Math.max(Date.now(), new Date(current.expires_at).getTime());
+    const expiresAt = new Date(baseTime + action.hours * 60 * 60_000).toISOString();
+    const { data, error } = await access.client
+      .from("invitation_codes")
+      .update({ expires_at: expiresAt })
+      .eq("id", action.id)
+      .is("used_at", null)
+      .is("disabled_at", null)
+      .select("id,expires_at")
+      .maybeSingle();
+    if (error || !data) throw error || new Error("InvitationExtendFailed");
+    await logOperationalEvent("invitation_extended", { requestId, route: "/api/admin/invitations", outcome: "info", status: 200, errorType: `Hours${action.hours}` });
+    return NextResponse.json({ ok: true, invitation: data });
+  } catch (error) {
+    const status = error instanceof RequestBodyTooLargeError ? 413 : 400;
+    await logOperationalEvent("invitation_manage_failed", { requestId, route: "/api/admin/invitations", outcome: "error", status, errorType: error instanceof Error ? error.name : "UnknownError" });
+    return NextResponse.json({ error: "No pudimos actualizar el código de invitación." }, { status });
+  }
 }
 
 export async function POST(request: Request) {
