@@ -33,7 +33,8 @@ type AthleteData = {
   avatarUrl: string | null;
   subscription: { name: string; status: string; blocksAvailable: number; blocksUsed: number; expiresAt: string | null };
 };
-type Goal = { id: string; title: string; description: string; status: "active" | "closed" };
+type Goal = { id: string; title: string; description: string; status: "active" | "closed"; category?: string };
+const goalCategoryOptions = ["Rendimiento y confianza", "Emocionalidad y calma", "Lenguaje y creencias", "Corporalidad y presencia", "Vínculos y comunicación", "Equilibrio deporte y vida"];
 
 const exampleGoals: Goal[] = [];
 
@@ -64,7 +65,7 @@ export function AthleteSpace() {
         avatarUrl = data?.signedUrl ?? null;
       }
 
-      const storedGoals: Goal[] = Array.isArray(athleteProfile?.goals_list) ? athleteProfile.goals_list.flatMap((goal, index) => typeof goal === "string" ? [{ id: `initial-${index}`, title: goal, description: "", status: "active" as const }] : goal && typeof goal === "object" && "title" in goal ? [{ id: String((goal as Goal).id || crypto.randomUUID()), title: String((goal as Goal).title), description: String((goal as Goal).description || ""), status: (goal as Goal).status === "closed" ? "closed" : "active" }] : []) : [];
+      const storedGoals: Goal[] = Array.isArray(athleteProfile?.goals_list) ? athleteProfile.goals_list.flatMap<Goal>((goal, index) => typeof goal === "string" ? [{ id: `initial-${index}`, title: goal, description: "", status: "active" }] : goal && typeof goal === "object" && "title" in goal ? [{ id: String((goal as Goal).id || crypto.randomUUID()), title: String((goal as Goal).title), description: String((goal as Goal).description || ""), status: (goal as Goal).status === "closed" ? "closed" : "active", category: goalCategoryOptions.includes(String((goal as Goal).category)) ? String((goal as Goal).category) : "" }] : []) : [];
       setAthlete({
         name: profile?.display_name || auth.user.email?.split("@")[0] || "Atleta",
         firstName: profile?.first_name || "",
@@ -171,7 +172,7 @@ export function AthleteSpace() {
           <div className="goals-heading"><div><h2>Mis objetivos</h2><span>{athlete?.goals.filter(goal => goal.status === "active").length || 0} activos</span></div><button onClick={() => setGoalEditor({ id: crypto.randomUUID(), title: "", description: "", status: "active" })}><Plus size={17} /> Nuevo</button></div>
           <div className="goals-list">
             {(athlete?.goals || []).map((goal, index) => <button className={`goal-card goal-shadow-${index % 3} ${goal.status === "closed" ? "closed" : ""}`} onClick={() => setGoalEditor(goal)} key={goal.id}>
-              <div><span className={`goal-pillar pillar-${index % 3}`}>{["Emoción", "Cuerpo", "Lenguaje"][index % 3]}</span><small>{index === 0 ? "En práctica" : index === 1 ? "Hábito consciente" : "Proceso semanal"}</small></div>
+              <div><span className={`goal-pillar pillar-${index % 3}`}>{goal.category || ["Emoción", "Cuerpo", "Lenguaje"][index % 3]}</span><small>{index === 0 ? "En práctica" : index === 1 ? "Hábito consciente" : "Proceso semanal"}</small></div>
               <h3>{goal.title}</h3>{goal.description && <p>{goal.description}</p>}<div className="goal-progress"><span>{goal.status === "closed" ? "Objetivo cerrado" : "Sesiones donde se trabajó"}</span><b>Próximamente</b></div>
             </button>)}
           </div>
@@ -194,33 +195,40 @@ function GoalModal({ goal, onClose, onSave, onDelete }: { goal: Goal; onClose: (
   const [description, setDescription] = useState(goal.description);
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [intention, setIntention] = useState("");
-  const [reflection, setReflection] = useState("");
+  const [assistantQuestion, setAssistantQuestion] = useState("");
+  const [assistantMessages, setAssistantMessages] = useState<string[]>([]);
   const [assistantStatus, setAssistantStatus] = useState("");
   const [helping, setHelping] = useState(false);
+  const [category, setCategory] = useState(goal.category || "");
 
   async function askGoalAssistant() {
     if (intention.trim().length < 8) return setAssistantStatus("Contanos un poco más sobre lo que te gustaría trabajar.");
-    setHelping(true); setAssistantStatus(""); setReflection("");
+    setHelping(true); setAssistantStatus("");
     try {
       const client = createBrowserSupabaseClient();
       const { data } = await client.auth.getSession();
       const response = await fetch("/api/goals/assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${data.session?.access_token || ""}` },
-        body: JSON.stringify({ intention }),
+        body: JSON.stringify({ messages: [...assistantMessages, intention.trim()] }),
       });
-      const payload = await response.json() as { ok?: boolean; error?: string; suggestion?: { title?: string; description?: string; reflection?: string } };
+      const payload = await response.json() as { ok?: boolean; error?: string; suggestion?: { kind?: "question" | "suggestion"; title?: string; description?: string; category?: string; question?: string } };
       if (!response.ok || !payload.ok || !payload.suggestion) throw new Error(payload.error || "No pudimos preparar una propuesta.");
-      setTitle(payload.suggestion.title || title);
-      setDescription(payload.suggestion.description || description);
-      setReflection(payload.suggestion.reflection || "");
-      setAssistantStatus("Propuesta lista. Podés editarla antes de guardarla.");
+      setAssistantMessages((messages) => [...messages, intention.trim()]);
+      setIntention("");
+      setAssistantQuestion(payload.suggestion.question || "");
+      if (payload.suggestion.kind === "suggestion") {
+        setTitle(payload.suggestion.title || title);
+        setDescription(payload.suggestion.description || description);
+        setCategory(goalCategoryOptions.includes(payload.suggestion.category || "") ? payload.suggestion.category || "" : "");
+        setAssistantStatus("Propuesta lista. Podés editarla antes de guardarla.");
+      } else setAssistantStatus("Aksis necesita conocer un poco más antes de proponer el objetivo.");
     } catch (error) {
       setAssistantStatus(error instanceof Error && error.message ? error.message : "No pudimos preparar una propuesta. Intentá nuevamente.");
     } finally { setHelping(false); }
   }
 
-  return <form className="aksis-modal" onSubmit={event => { event.preventDefault(); const form = new FormData(event.currentTarget); void onSave({ ...goal, title: String(form.get("title") || ""), description: String(form.get("description") || ""), status: String(form.get("status")) === "closed" ? "closed" : "active" }); }}><div><h2>{goal.title ? "Objetivo" : "Nuevo objetivo"}</h2><button className="goal-ai-trigger" type="button" onClick={() => setAssistantOpen(open => !open)}>✦ Ayuda con IA</button>{assistantOpen && <section className="goal-ai-helper"><p>Contale qué te gustaría transformar. Aksis te propone un borrador desde el coaching ontológico deportivo; la decisión siempre es tuya.</p><label>Tu intención<textarea value={intention} onChange={event => setIntention(event.target.value)} placeholder="Ej. Quiero disfrutar más los partidos sin quedar atrapado en el miedo a equivocarme." /></label><button className="goal-ai-request" type="button" onClick={() => void askGoalAssistant()} disabled={helping}>{helping ? "Pensando la propuesta…" : "Crear propuesta"}</button>{assistantStatus && <small className="goal-ai-status" aria-live="polite">{assistantStatus}</small>}{reflection && <blockquote>{reflection}</blockquote>}</section>}<label>Título<input name="title" value={title} onChange={event => setTitle(event.target.value)} required /></label><label>Descripción<textarea name="description" value={description} onChange={event => setDescription(event.target.value)} /></label><label>Estado<select name="status" defaultValue={goal.status}><option value="active">Activo</option><option value="closed">Cerrado</option></select></label><footer><button type="button" onClick={onClose}>Cancelar</button>{!goal.id.startsWith("initial-") && <button type="button" onClick={() => void onDelete()}>Borrar</button>}<button type="submit">Guardar</button></footer></div></form>;
+  return <form className="aksis-modal" onSubmit={event => { event.preventDefault(); const form = new FormData(event.currentTarget); void onSave({ ...goal, title: String(form.get("title") || ""), description: String(form.get("description") || ""), category: String(form.get("category") || ""), status: String(form.get("status")) === "closed" ? "closed" : "active" }); }}><div><h2>{goal.title ? "Objetivo" : "Nuevo objetivo"}</h2><button className="goal-ai-trigger" type="button" onClick={() => setAssistantOpen(open => !open)}>✦ Ayuda con IA</button>{assistantOpen && <section className="goal-ai-helper"><p>Contale qué te gustaría transformar. Aksis puede repreguntar antes de proponer un objetivo desde el coaching ontológico deportivo.</p>{assistantQuestion && <blockquote>{assistantQuestion}</blockquote>}<label>{assistantQuestion ? "Tu respuesta" : "Tu intención"}<textarea value={intention} onChange={event => setIntention(event.target.value)} placeholder="Ej. Quiero disfrutar más los partidos sin quedar atrapado en el miedo a equivocarme." /></label><button className="goal-ai-request" type="button" onClick={() => void askGoalAssistant()} disabled={helping}>{helping ? "Pensando la propuesta…" : assistantQuestion ? "Responder" : "Conversar con Aksis"}</button>{assistantStatus && <small className="goal-ai-status" aria-live="polite">{assistantStatus}</small>}</section>}<label>Título<input name="title" value={title} onChange={event => setTitle(event.target.value)} required /></label><label>Descripción<textarea name="description" value={description} onChange={event => setDescription(event.target.value)} /></label><label>Tipo de objetivo<select name="category" value={category} onChange={event => setCategory(event.target.value)}><option value="">Elegí un tipo</option>{goalCategoryOptions.map((item) => <option value={item} key={item}>{item}</option>)}</select></label><label>Estado<select name="status" defaultValue={goal.status}><option value="active">Activo</option><option value="closed">Cerrado</option></select></label><footer><button type="button" onClick={onClose}>Cancelar</button>{!goal.id.startsWith("initial-") && <button type="button" onClick={() => void onDelete()}>Borrar</button>}<button type="submit">Guardar</button></footer></div></form>;
 }
 
 function ProfileModal({ athlete, onClose, onSubmit }: { athlete: AthleteData; onClose: () => void; onSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void> }) {

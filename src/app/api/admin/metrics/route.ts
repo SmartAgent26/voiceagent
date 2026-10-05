@@ -31,7 +31,7 @@ export async function GET(request: Request) {
   if (exportCsv) {
     if (!from || !to) return NextResponse.json({ error: "Elegí una fecha inicial y una fecha final para exportar." }, { status: 400 });
     const { data: rows, error } = await client.from("ai_usage_events")
-      .select("athlete_id,session_id,input_tokens,output_tokens,total_tokens,estimated_cost_usd,status,created_at")
+      .select("athlete_id,session_id,operation,input_tokens,output_tokens,total_tokens,estimated_cost_usd,status,created_at")
       .gte("created_at", from.toISOString()).lte("created_at", to.toISOString())
       .order("created_at", { ascending: false }).limit(MAX_EXPORT_ROWS);
     if (error) return NextResponse.json({ error: "No pudimos preparar la exportación." }, { status: 500 });
@@ -42,8 +42,8 @@ export async function GET(request: Request) {
     if (profilesError) return NextResponse.json({ error: "No pudimos asociar los atletas de la exportación." }, { status: 500 });
     const names = new Map((profiles || []).map((profile) => [profile.id, profile.display_name || "Atleta sin nombre"]));
     const lines = [
-      ["Fecha", "Atleta", "Tokens IN", "Tokens OUT", "Tokens totales", "Costo estimado USD", "Estado"].map(csvValue).join(","),
-      ...(rows || []).map((row) => [row.created_at, names.get(row.athlete_id) || "Atleta sin nombre", Number(row.input_tokens || 0), Number(row.output_tokens || 0), Number(row.total_tokens || 0), Number(row.estimated_cost_usd || 0), row.status].map(csvValue).join(",")),
+      ["Fecha", "Atleta", "Operación", "Tokens IN", "Tokens OUT", "Tokens totales", "Costo estimado USD", "Estado"].map(csvValue).join(","),
+      ...(rows || []).map((row) => [row.created_at, names.get(row.athlete_id) || "Atleta sin nombre", row.operation, Number(row.input_tokens || 0), Number(row.output_tokens || 0), Number(row.total_tokens || 0), Number(row.estimated_cost_usd || 0), row.status].map(csvValue).join(",")),
     ];
     return new NextResponse(`\uFEFF${lines.join("\r\n")}`, {
       headers: {
@@ -64,8 +64,8 @@ export async function GET(request: Request) {
     client.from("profiles").select("id", { count: "exact", head: true }).eq("role", "athlete").eq("account_status", "active"),
     client.from("coaching_sessions").select("id", { count: "exact", head: true }).gte("started_at", monthStart.toISOString()),
     client.from("subscription_plans").select("id", { count: "exact", head: true }).eq("active", true),
-    client.from("ai_usage_events").select("athlete_id,session_id,input_tokens,output_tokens,total_tokens,estimated_cost_usd,status,created_at").order("created_at", { ascending: false }).limit(1000),
-    client.from("ai_usage_events").select("athlete_id,session_id,input_tokens,output_tokens,total_tokens,estimated_cost_usd,status,created_at", { count: "exact" }).order("created_at", { ascending: false }).range((page - 1) * SESSION_PAGE_SIZE, page * SESSION_PAGE_SIZE - 1),
+    client.from("ai_usage_events").select("athlete_id,session_id,operation,input_tokens,output_tokens,total_tokens,estimated_cost_usd,status,created_at").gte("created_at", monthStart.toISOString()).order("created_at", { ascending: false }).limit(1000),
+    client.from("ai_usage_events").select("athlete_id,session_id,operation,input_tokens,output_tokens,total_tokens,estimated_cost_usd,status,created_at", { count: "exact" }).order("created_at", { ascending: false }).range((page - 1) * SESSION_PAGE_SIZE, page * SESSION_PAGE_SIZE - 1),
   ]);
 
   if (athletes.error || sessions.error || plans.error || usage.error || sessionPage.error) {
@@ -119,6 +119,7 @@ export async function GET(request: Request) {
       athleteId: row.athlete_id,
       athleteName: names.get(row.athlete_id) || "Atleta sin nombre",
       sessionId: row.session_id,
+      operation: row.operation || "coach_reply",
       inputTokens: Number(row.input_tokens || 0),
       outputTokens: Number(row.output_tokens || 0),
       totalTokens: Number(row.total_tokens || 0),
