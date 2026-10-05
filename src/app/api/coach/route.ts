@@ -81,7 +81,9 @@ export async function POST(request: Request) {
         errorType: unavailableSources.join(",").slice(0, 180),
       });
     }
-    const asksForGoals = Boolean(lastUserMessage && /objetiv[\s\S]{0,90}(record|recuerda|cu[aá]l|cuales|cu[aá]les|ten[eé]s|son)/i.test(lastUserMessage.content));
+    // Nombrar los objetivos es una intención explícita de consultar su proceso;
+    // no depende de que el atleta formule una pregunta literal de recuperación.
+    const asksForGoals = Boolean(lastUserMessage && /\bobjetiv(?:o|os)\b/i.test(lastUserMessage.content));
     const knownGoals = athleteContext.variables.objetivos && athleteContext.variables.objetivos !== "no informados";
     const athleteName = firstName(athleteContext.variables.nombre);
     const reply = safety.blocked
@@ -91,7 +93,9 @@ export async function POST(request: Request) {
       : asksForGoals && !athleteContext.availability.goals
       ? { content: "Ahora no pude recuperar tus objetivos. Probá nuevamente en un momento y los revisamos juntos.", model: "contexto-no-disponible", provider: "aksis", usage: { inputTokens: 0, outputTokens: 0, totalTokens: 0 } }
       : asksForGoals && knownGoals
-      ? { content: `Claro. Estos son los objetivos que hoy tenemos presentes:\n\n${athleteContext.variables.objetivos.split(" · ").map((goal) => `- ${goal}`).join("\n")}\n\n¿Cuál sentís que está pidiendo más atención en este momento?`, model: "perfil-actualizado", provider: "aksis", usage: { inputTokens: 0, outputTokens: 0, totalTokens: 0 } }
+      ? { content: `Claro${athleteName ? `, ${athleteName}` : ""}. Estos son los objetivos que hoy tenemos presentes:\n\n${athleteContext.variables.objetivos.split(" · ").map((goal) => `- ${goal}`).join("\n")}\n\n¿Cuál te gustaría mirar primero?`, model: "perfil-actualizado", provider: "aksis", usage: { inputTokens: 0, outputTokens: 0, totalTokens: 0 } }
+      : asksForGoals
+      ? { content: `Quiero acompañarte con eso${athleteName ? `, ${athleteName}` : ""}. Por ahora no encuentro objetivos activos registrados en tu espacio. ¿Qué te gustaría transformar en tu experiencia deportiva para que armemos uno juntos?`, model: "perfil-sin-objetivos", provider: "aksis", usage: { inputTokens: 0, outputTokens: 0, totalTokens: 0 } }
       : await createCoachReply(recentHistory, athleteContext.context, athleteContext.variables);
     const { data: persisted, error: persistError } = await client
       .rpc("persist_coach_exchange", {

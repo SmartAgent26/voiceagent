@@ -82,6 +82,21 @@ function isSafeCompactSummary(content: string) {
   return Boolean(content) && !/(^|\n)\s*(the user wants|analysis of the session|drafting summary|constraints:|internal process|system prompt)/i.test(content);
 }
 
+function normalizedQuestion(value: string) {
+  return value.toLocaleLowerCase("es-AR").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+}
+
+function isRepeatedCoachReply(content: string, history: CoachTurn[]) {
+  const normalized = normalizedQuestion(content);
+  return normalized.length > 16 && history.some((turn) => turn.role === "assistant" && normalizedQuestion(turn.content) === normalized);
+}
+
+function conversationFallback(history: CoachTurn[]) {
+  const latest = [...history].reverse().find((turn) => turn.role === "user")?.content.trim() || "eso";
+  const fragment = latest.replace(/\s+/g, " ").slice(0, 115);
+  return `Nombrás “${fragment}”. Para quedarnos en ese hilo, ¿qué te gustaría que esta conversación haga posible para vos hoy?`;
+}
+
 export function separateSummaryFocus(content: string) {
   const match = content.match(/\[\[FOCO_RELEVANTE:\s*([^\]]*)\]\]/i);
   const focus = match?.[1]?.trim() || null;
@@ -151,7 +166,9 @@ export async function createCoachReply(history: CoachTurn[], athleteContext = ""
     const result = await createOpenAICompatibleReply(contextualConfiguration, history);
     const isSensitiveReferral = /(107|911|0800-999-0091|\b135\b|salud mental|autolesi[oó]n|suicidio|emergencia)/i.test(result.content);
     const hasCompleteQuestion = /\?\s*$/.test(result.content);
-    const content = !result.content || (!isSensitiveReferral && !hasCompleteQuestion) ? "¿Qué aspecto de esta situación te gustaría mirar con más detalle?" : result.content;
+    const content = !result.content || (!isSensitiveReferral && !hasCompleteQuestion) || isRepeatedCoachReply(result.content, history)
+      ? conversationFallback(history)
+      : result.content;
     const safety = assessCoachOutput(content);
     return { content: safety.blocked ? safety.response || "No puedo responder de esa manera." : content, model, provider, usage: result.usage };
   }
@@ -190,8 +207,8 @@ export async function createCoachReply(history: CoachTurn[], athleteContext = ""
   const isSensitiveReferral = /(107|911|0800-999-0091|\b135\b|salud mental|autolesi[oó]n|suicidio|emergencia)/i.test(content);
   const hasCompleteQuestion = /\?\s*$/.test(content);
 
-  const resolvedContent = !content || isTechnicalSafetyLabel || (!isSensitiveReferral && !hasCompleteQuestion)
-      ? "¿Qué hiciste hoy que te gustaría poder repetir en tu próximo entrenamiento?"
+  const resolvedContent = !content || isTechnicalSafetyLabel || (!isSensitiveReferral && !hasCompleteQuestion) || isRepeatedCoachReply(content, history)
+      ? conversationFallback(history)
       : content;
   const safety = assessCoachOutput(resolvedContent);
   return {
