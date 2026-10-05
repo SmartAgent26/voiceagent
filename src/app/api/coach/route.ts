@@ -35,6 +35,10 @@ function wantsToReleaseFocus(message: string) {
   return /(no\s+quiero\s+(hablar|seguir|volver)\s+(m[aá]s\s+)?(de\s+)?(esto|eso|ese\s+tema)|dejemos\s+(esto|eso|ese\s+tema)|cambiemos\s+de\s+tema|ya\s+no\s+quiero\s+trabajar\s+eso)/i.test(message);
 }
 
+function explicitlyRequestsGoalList(message: string) {
+  return /(cu[aá]les\s+(son|tengo)|record[aá]me|decime|mostrame|repasemos)[^?.!]{0,70}\bobjetiv(?:o|os)\b|\bobjetiv(?:o|os)\b[^?.!]{0,70}(cu[aá]les\s+(son|tengo)|record[aá]me|decime|mostrame|repasemos)/i.test(message);
+}
+
 export async function POST(request: Request) {
   const requestId = request.headers.get("x-request-id") || crypto.randomUUID();
   try {
@@ -81,20 +85,18 @@ export async function POST(request: Request) {
         errorType: unavailableSources.join(",").slice(0, 180),
       });
     }
-    // Nombrar los objetivos es una intención explícita de consultar su proceso;
-    // no depende de que el atleta formule una pregunta literal de recuperación.
-    const asksForGoals = Boolean(lastUserMessage && /\bobjetiv(?:o|os)\b/i.test(lastUserMessage.content));
+    const asksForGoalList = Boolean(lastUserMessage && explicitlyRequestsGoalList(lastUserMessage.content));
     const knownGoals = athleteContext.variables.objetivos && athleteContext.variables.objetivos !== "no informados";
     const athleteName = firstName(athleteContext.variables.nombre);
     const reply = safety.blocked
       ? { content: safety.response || "Por cuidado, pausamos este diálogo y buscamos apoyo adecuado.", model: "safety-guard", provider: "aksis", usage: { inputTokens: 0, outputTokens: 0, totalTokens: 0 } }
       : lastUserMessage && wantsToClose(lastUserMessage.content)
       ? { content: `Claro${athleteName ? `, ${athleteName}` : ""}. Gracias por compartir este momento. Podemos retomar cuando quieras, desde donde lo dejamos. Que tengas un buen día.`, model: "cierre-de-sesión", provider: "aksis", usage: { inputTokens: 0, outputTokens: 0, totalTokens: 0 } }
-      : asksForGoals && !athleteContext.availability.goals
+      : asksForGoalList && !athleteContext.availability.goals
       ? { content: "Ahora no pude recuperar tus objetivos. Probá nuevamente en un momento y los revisamos juntos.", model: "contexto-no-disponible", provider: "aksis", usage: { inputTokens: 0, outputTokens: 0, totalTokens: 0 } }
-      : asksForGoals && knownGoals
+      : asksForGoalList && knownGoals
       ? { content: `Claro${athleteName ? `, ${athleteName}` : ""}. Estos son los objetivos que hoy tenemos presentes:\n\n${athleteContext.variables.objetivos.split(" · ").map((goal) => `- ${goal}`).join("\n")}\n\n¿Cuál te gustaría mirar primero?`, model: "perfil-actualizado", provider: "aksis", usage: { inputTokens: 0, outputTokens: 0, totalTokens: 0 } }
-      : asksForGoals
+      : asksForGoalList
       ? { content: `Quiero acompañarte con eso${athleteName ? `, ${athleteName}` : ""}. Por ahora no encuentro objetivos activos registrados en tu espacio. ¿Qué te gustaría transformar en tu experiencia deportiva para que armemos uno juntos?`, model: "perfil-sin-objetivos", provider: "aksis", usage: { inputTokens: 0, outputTokens: 0, totalTokens: 0 } }
       : await createCoachReply(recentHistory, athleteContext.context, athleteContext.variables);
     const { data: persisted, error: persistError } = await client
