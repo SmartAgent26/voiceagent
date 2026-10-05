@@ -127,15 +127,36 @@ async function getReferenceQuestionGuide() {
 }
 
 type OpenAICompatibleResponse = { choices?: Array<{ message?: { content?: string } }>; usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number } };
+
+/**
+ * Conserva solamente proveedor y estado HTTP para la auditoría. Nunca se
+ * propaga la respuesta del proveedor: puede contener datos de configuración
+ * que no deben aparecer ni al atleta ni en la consola del navegador.
+ */
+class AIProviderHttpError extends Error {
+  constructor(provider: string, status: number) {
+    super(`${provider} respondió con estado ${status}.`);
+    this.name = `AIProvider${provider.charAt(0).toUpperCase()}${provider.slice(1)}Http${status}`;
+  }
+}
+
 async function createOpenAICompatibleReply(configuration: AgentConfiguration, history: CoachTurn[]) {
   const isOpenRouter = configuration.provider === "openrouter";
   const apiKey = await getProviderApiKey(configuration.provider);
   if (!apiKey) throw new Error(`No hay una clave privada configurada para ${configuration.provider}.`);
+  const requestBody = {
+    model: configuration.model,
+    messages: [{ role: "system" as const, content: configuration.system_prompt }, ...history],
+    // OpenAI reemplazó max_tokens por max_completion_tokens. El anterior no
+    // funciona con modelos de razonamiento; OpenRouter conserva su parámetro
+    // compatible para no alterar los modelos de terceros.
+    ...(isOpenRouter ? { max_tokens: 320 } : { max_completion_tokens: 320 }),
+  };
   const response = await fetch(isOpenRouter ? "https://openrouter.ai/api/v1/chat/completions" : "https://api.openai.com/v1/chat/completions", {
     method: "POST", signal: AbortSignal.timeout(30_000), headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-    body: JSON.stringify({ model: configuration.model, messages: [{ role: "system", content: configuration.system_prompt }, ...history], max_tokens: 320 }),
+    body: JSON.stringify(requestBody),
   });
-  if (!response.ok) throw new Error(`${configuration.provider} respondió con estado ${response.status}.`);
+  if (!response.ok) throw new AIProviderHttpError(configuration.provider, response.status);
   const result = await response.json() as OpenAICompatibleResponse;
   return { content: result.choices?.[0]?.message?.content?.trim() || "", usage: { inputTokens: result.usage?.prompt_tokens ?? 0, outputTokens: result.usage?.completion_tokens ?? 0, totalTokens: result.usage?.total_tokens ?? 0 } };
 }
