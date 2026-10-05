@@ -32,6 +32,7 @@ export function AccessScreen() {
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [role, setRole] = useState("juvenil");
+  const [invitationCode, setInvitationCode] = useState("");
   const { showToast } = useAksisToast();
 
   useEffect(() => {
@@ -79,20 +80,12 @@ export function AccessScreen() {
         window.location.assign("/app");
         return;
       }
-      const result = await client.auth.signUp({
-            email,
-            password,
-            options: { data: { display_name: displayName, training_dimension: role } },
-          });
-
-      if (result.error) throw result.error;
-      if (result.data.session) {
-        if (!await synchronizeServerSession(result.data.session.access_token)) throw new Error("No pudimos establecer la sesión segura. Volvé a intentarlo.");
-        window.location.assign("/terms");
-        return;
-      }
-      setStatus("success");
-      setMessage("Tu cuenta fue creada con éxito. Revisá tu correo para confirmarla y luego ingresá a Aksis.");
+      const response = await fetch("/api/auth/signup", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, password, displayName, trainingDimension: role, invitationCode }) });
+      const payload = await response.json() as { ok?: boolean; error?: string; accessToken?: string; refreshToken?: string };
+      if (!payload.ok || !payload.accessToken || !payload.refreshToken) throw new Error(payload.error || "No pudimos crear la cuenta. Intentá nuevamente más tarde.");
+      const { error: sessionError } = await client.auth.setSession({ access_token: payload.accessToken, refresh_token: payload.refreshToken });
+      if (sessionError || !await synchronizeServerSession(payload.accessToken)) throw new Error("No pudimos establecer la sesión segura. Volvé a intentarlo.");
+      window.location.assign("/terms");
     } catch (error) {
       const rawMessage = error instanceof Error ? error.message : "";
       setStatus("error");
@@ -125,6 +118,7 @@ export function AccessScreen() {
               <label>ROL O DIMENSIÓN DE ENTRENAMIENTO</label>
               <div className="role-grid">{roles.map(([value, title, description]) => <button type="button" className={role === value ? "selected" : ""} onClick={() => setRole(value)} key={value}><strong>{title}</strong><small>{description}</small></button>)}</div>
               <label>NOMBRE COMPLETO<input value={displayName} onChange={(event) => setDisplayName(event.target.value)} placeholder="Ej. Sofía Morales" required /></label>
+              <label>CÓDIGO DE INVITACIÓN<input value={invitationCode} onChange={(event) => setInvitationCode(event.target.value.toUpperCase())} placeholder="X27T-J5TP" autoComplete="off" required /></label>
             </>}
             <label>CORREO ELECTRÓNICO INSTITUCIONAL O PERSONAL<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="atleta@aksis.pro" required /></label>
             <label className="password-label">CONTRASEÑA{mode === "login" && <a href="#">¿Olvidaste tu contraseña?</a>}<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="••••••••••••" minLength={8} required /></label>
