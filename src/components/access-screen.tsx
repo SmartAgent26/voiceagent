@@ -70,20 +70,22 @@ export function AccessScreen() {
     setMessage("");
     try {
       const client = createBrowserSupabaseClient();
-      const result = mode === "login"
-        ? await client.auth.signInWithPassword({ email, password })
-        : await client.auth.signUp({
+      if (mode === "login") {
+        const response = await fetch("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, password }) });
+        const payload = await response.json() as { ok?: boolean; error?: string; accessToken?: string; refreshToken?: string };
+        if (!payload.ok || !payload.accessToken || !payload.refreshToken) throw new Error(payload.error || "No pudimos iniciar sesión. Intentá nuevamente más tarde.");
+        const { error: sessionError } = await client.auth.setSession({ access_token: payload.accessToken, refresh_token: payload.refreshToken });
+        if (sessionError || !await synchronizeServerSession(payload.accessToken)) throw new Error("No pudimos establecer la sesión segura. Volvé a intentarlo.");
+        window.location.assign("/app");
+        return;
+      }
+      const result = await client.auth.signUp({
             email,
             password,
             options: { data: { display_name: displayName, training_dimension: role } },
           });
 
       if (result.error) throw result.error;
-      if (mode === "login") {
-        if (!result.data.session?.access_token || !await synchronizeServerSession(result.data.session.access_token)) throw new Error("No pudimos establecer la sesión segura. Volvé a intentarlo.");
-        window.location.assign("/app");
-        return;
-      }
       if (result.data.session) {
         if (!await synchronizeServerSession(result.data.session.access_token)) throw new Error("No pudimos establecer la sesión segura. Volvé a intentarlo.");
         window.location.assign("/terms");

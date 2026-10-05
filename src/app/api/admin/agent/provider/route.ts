@@ -4,6 +4,7 @@ import { getAuthenticatedAdminId } from "@/lib/agent/auth";
 import { encryptCredential, getProviderApiKey, type AgentProvider } from "@/lib/agent/credentials";
 import { enforceRateLimit, parseJsonBody, rateLimitHeaders, RequestBodyTooLargeError } from "@/lib/security/request-guards";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { logOperationalEvent } from "@/lib/security/logger";
 
 const providerSchema = z.enum(["gemini", "openai", "openrouter"]);
 const saveSchema = z.object({ provider: providerSchema, apiKey: z.string().trim().min(8).max(1000) });
@@ -24,6 +25,7 @@ async function modelsFor(provider: AgentProvider) {
 }
 
 export async function GET(request: Request) {
+  const requestId = crypto.randomUUID();
   const adminId = await getAuthenticatedAdminId(request);
   const provider = providerSchema.safeParse(new URL(request.url).searchParams.get("provider"));
   if (!adminId) return NextResponse.json({ error: "No autorizado." }, { status: 401 });
@@ -32,13 +34,13 @@ export async function GET(request: Request) {
   if (!provider.success) return NextResponse.json({ error: "Proveedor inválido." }, { status: 400 });
   try { return NextResponse.json({ models: await modelsFor(provider.data), configured: true }); }
   catch (error) {
-    const message = error instanceof Error ? error.message : "No fue posible consultar los modelos.";
-    if (message.includes("No hay una clave privada") || message.includes("AGENT_CREDENTIALS_ENCRYPTION_KEY_V1")) return NextResponse.json({ models: [], configured: false });
-    return NextResponse.json({ error: message, configured: false }, { status: 400 });
+    await logOperationalEvent("agent_provider_models_unavailable", { requestId, route: "/api/admin/agent/provider", outcome: "warning", status: 502, errorType: error instanceof Error ? error.name : "UnknownError" });
+    return NextResponse.json({ models: [], configured: false });
   }
 }
 
 export async function PUT(request: Request) {
+  const requestId = crypto.randomUUID();
   const adminId = await getAuthenticatedAdminId(request);
   if (!adminId) return NextResponse.json({ error: "No autorizado." }, { status: 401 });
   try {
@@ -49,5 +51,8 @@ export async function PUT(request: Request) {
     const { error: saveError } = await client.from("agent_provider_credentials").upsert({ provider, ...encryptCredential(apiKey), updated_by: adminId });
     if (saveError) throw saveError;
     return NextResponse.json({ ok: true, models: await modelsFor(provider) });
-  } catch (error) { return NextResponse.json({ error: error instanceof RequestBodyTooLargeError ? error.message : error instanceof Error ? error.message : "No fue posible guardar la clave." }, { status: error instanceof RequestBodyTooLargeError ? 413 : 400 }); }
+  } catch (error) {
+    await logOperationalEvent("agent_provider_token_save_failed", { requestId, route: "/api/admin/agent/provider", outcome: "error", status: error instanceof RequestBodyTooLargeError ? 413 : 400, errorType: error instanceof Error ? error.name : "UnknownError" });
+    return NextResponse.json({ ok: false, error: error instanceof RequestBodyTooLargeError ? "El token ingresado supera el tamaño permitido." : "No pudimos validar y guardar el token. Revisalo e intentá nuevamente." });
+  }
 }

@@ -7,7 +7,8 @@ export async function synchronizeServerSession(accessToken: string) {
       headers: { Authorization: `Bearer ${accessToken}` },
       cache: "no-store",
     });
-    return response.ok;
+    const payload = await response.json() as { ok?: boolean };
+    return response.ok && payload.ok === true;
   } catch {
     return false;
   }

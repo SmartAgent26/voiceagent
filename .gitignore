@@ -5,3 +5,5 @@ agent-methodology.md
 .env*.local
 node_modules/
 .next/
+
+.vercel

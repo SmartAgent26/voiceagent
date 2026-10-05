@@ -98,13 +98,12 @@ export async function POST(request: Request) {
     if (!(persisted as { session_found?: boolean } | null)?.session_found) {
       return NextResponse.json({ error: "La sesión de coaching no está disponible." }, { status: 404 });
     }
-    return NextResponse.json({ ...reply, blocksRemaining }, { headers: { "X-Request-Id": requestId } });
+    return NextResponse.json({ ok: true, ...reply, blocksRemaining }, { headers: { "X-Request-Id": requestId } });
   } catch (error) {
-    if (error instanceof RequestBodyTooLargeError) return NextResponse.json({ error: error.message }, { status: 413 });
-    if (!(error instanceof z.ZodError)) await logOperationalEvent("coach_request_failed", { requestId, route: "/api/coach", outcome: "error", status: 400, errorType: error instanceof Error ? error.name : "UnknownError" });
-    const message = error instanceof z.ZodError
-      ? "El mensaje no tiene un formato válido."
-      : "No fue posible conectar con el agente. Intentá nuevamente.";
-    return NextResponse.json({ error: message }, { status: 400 });
+    await logOperationalEvent("coach_request_failed", { requestId, route: "/api/coach", outcome: error instanceof z.ZodError || error instanceof RequestBodyTooLargeError ? "warning" : "error", status: error instanceof RequestBodyTooLargeError ? 413 : 400, errorType: error instanceof Error ? error.name : "UnknownError" });
+    const message = error instanceof z.ZodError || error instanceof RequestBodyTooLargeError
+      ? "No pudimos procesar ese mensaje. Intentá nuevamente."
+      : "No pudimos continuar la conversación en este momento. Intentá nuevamente más tarde.";
+    return NextResponse.json({ ok: false, error: message });
   }
 }

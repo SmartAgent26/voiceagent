@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useAksisToast } from "@/components/aksis-toast";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 
-type AuditEvent = { id: number; actor_id: string | null; action: string; entity_type: string; entity_id: string | null; metadata: Record<string, unknown>; created_at: string };
+type AuditEvent = { id: string; actor_id: string | null; action: string; entity_type: string; entity_id: string | null; metadata: Record<string, unknown>; created_at: string };
+type OperationalEvent = { id: number; event: string; request_id: string | null; route: string; outcome: "error" | "warning" | "info"; status: number | null; error_type: string | null; created_at: string };
 type Actor = { id: string; display_name: string | null };
 const PAGE_SIZE = 20;
 
@@ -29,9 +30,14 @@ export default function Audit() {
 
   async function load() {
     setLoading(true); const client = createBrowserSupabaseClient();
-    const { data, error } = await client.from("audit_log").select("id,actor_id,action,entity_type,entity_id,metadata,created_at").order("created_at", { ascending: false }).limit(200);
-    if (error) { showToast("No pudimos cargar el registro de auditoría.", "error"); setLoading(false); return; }
-    const rows = (data || []) as AuditEvent[]; setEvents(rows);
+    const [{ data, error }, { data: operational, error: operationalError }] = await Promise.all([
+      client.from("audit_log").select("id,actor_id,action,entity_type,entity_id,metadata,created_at").order("created_at", { ascending: false }).limit(200),
+      client.from("operational_events").select("id,event,request_id,route,outcome,status,error_type,created_at").order("created_at", { ascending: false }).limit(200),
+    ]);
+    if (error || operationalError) { showToast("No pudimos cargar el registro de auditoría.", "error"); setLoading(false); return; }
+    const auditRows = ((data || []) as Array<Omit<AuditEvent, "id"> & { id: number }>).map((event) => ({ ...event, id: `audit-${event.id}` }));
+    const operationalRows = ((operational || []) as OperationalEvent[]).map((event) => ({ id: `operational-${event.id}`, actor_id: null, action: event.event, entity_type: "operación", entity_id: event.request_id, metadata: { resultado: event.outcome, estado: event.status ? `HTTP ${event.status}` : "sin estado", tipo: event.error_type || "sin detalle" }, created_at: event.created_at }));
+    const rows = [...auditRows, ...operationalRows].sort((left, right) => new Date(right.created_at).getTime() - new Date(left.created_at).getTime()); setEvents(rows);
     const ids = [...new Set(rows.map((row) => row.actor_id).filter(Boolean))] as string[];
     if (ids.length) { const { data: profiles } = await client.from("profiles").select("id,display_name").in("id", ids); setActors(Object.fromEntries(((profiles || []) as Actor[]).map((profile) => [profile.id, profile.display_name || "Usuario Aksis"]))); }
     setLoading(false);
