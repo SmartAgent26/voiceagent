@@ -69,6 +69,18 @@ export async function POST(request: Request) {
     const lastUserMessage = { role: "user" as const, content: payload.message };
     const safety = assessCoachInput(lastUserMessage.content);
     const athleteContext = await buildAthleteContext(athleteId);
+    const unavailableSources = Object.entries(athleteContext.availability)
+      .filter(([, available]) => !available)
+      .map(([source]) => source);
+    if (unavailableSources.length) {
+      await logOperationalEvent("coach_context_source_unavailable", {
+        requestId,
+        route: "/api/coach",
+        outcome: "warning",
+        status: 503,
+        errorType: unavailableSources.join(",").slice(0, 180),
+      });
+    }
     const asksForGoals = Boolean(lastUserMessage && /objetiv[\s\S]{0,90}(record|recuerda|cu[aá]l|cuales|cu[aá]les|ten[eé]s|son)/i.test(lastUserMessage.content));
     const knownGoals = athleteContext.variables.objetivos && athleteContext.variables.objetivos !== "no informados";
     const athleteName = firstName(athleteContext.variables.nombre);
@@ -76,6 +88,8 @@ export async function POST(request: Request) {
       ? { content: safety.response || "Por cuidado, pausamos este diálogo y buscamos apoyo adecuado.", model: "safety-guard", provider: "aksis", usage: { inputTokens: 0, outputTokens: 0, totalTokens: 0 } }
       : lastUserMessage && wantsToClose(lastUserMessage.content)
       ? { content: `Claro${athleteName ? `, ${athleteName}` : ""}. Gracias por compartir este momento. Podemos retomar cuando quieras, desde donde lo dejamos. Que tengas un buen día.`, model: "cierre-de-sesión", provider: "aksis", usage: { inputTokens: 0, outputTokens: 0, totalTokens: 0 } }
+      : asksForGoals && !athleteContext.availability.goals
+      ? { content: "Ahora no pude recuperar tus objetivos. Probá nuevamente en un momento y los revisamos juntos.", model: "contexto-no-disponible", provider: "aksis", usage: { inputTokens: 0, outputTokens: 0, totalTokens: 0 } }
       : asksForGoals && knownGoals
       ? { content: `Claro. Estos son los objetivos que hoy tenemos presentes:\n\n${athleteContext.variables.objetivos.split(" · ").map((goal) => `- ${goal}`).join("\n")}\n\n¿Cuál sentís que está pidiendo más atención en este momento?`, model: "perfil-actualizado", provider: "aksis", usage: { inputTokens: 0, outputTokens: 0, totalTokens: 0 } }
       : await createCoachReply(recentHistory, athleteContext.context, athleteContext.variables);
