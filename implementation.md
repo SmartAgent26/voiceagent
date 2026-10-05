@@ -20,7 +20,7 @@ El alcance se divide en cinco frentes:
 | --- | --- | --- | --- |
 | 0 | Inventario y auditoría técnica | Acceso de desarrollo y Supabase | Pendiente |
 | 1 | Plan de remediación y paquete de cumplimiento | Hallazgos de fase 0 | Pendiente |
-| 2 | PWA del deportista | Controles críticos cerrados | Pendiente |
+| 2 | PWA del deportista | Controles críticos cerrados | En curso |
 | 3 | Android | PWA estable y pruebas en móvil | Pendiente |
 | 4 | Landing | Mensaje comercial, capturas aprobadas | Pendiente |
 | 5 | Video | Landing, guion y recursos visuales aprobados | Pendiente |
@@ -101,10 +101,10 @@ Ofrecer una experiencia instalable, segura y mobile-first exclusivamente para de
 
 ### Tareas
 
-- [ ] Definir el manifiesto: nombre Aksis, nombre corto, colores oficiales, orientación, categorías e iconos en todos los tamaños requeridos.
-- [ ] Generar iconos adaptables/maskable, splash screens y metadatos sociales sin incluir datos personales.
-- [ ] Implementar service worker con una estrategia conservadora: cachear shell y recursos públicos; no guardar conversaciones, fotos, tokens, respuestas de IA ni datos sensibles offline.
-- [ ] Agregar experiencia de instalación solo para rutas del deportista: invitación discreta, instalación manual en iOS y estado de app ya instalada.
+- [x] Definir el manifiesto: nombre Aksis, nombre corto, colores oficiales, orientación, categorías e iconos en todos los tamaños requeridos.
+- [x] Generar iconos adaptables/maskable sin incluir datos personales. Las splash screens quedan cubiertas por `background_color` y el sistema operativo; los metadatos sociales se revisarán junto con la landing.
+- [x] Implementar service worker con una estrategia conservadora: solo conserva la pantalla pública offline y los íconos; no guarda conversaciones, fotos, tokens, respuestas de IA ni datos sensibles offline.
+- [x] Agregar experiencia de instalación solo para rutas del deportista: invitación discreta, instalación manual en iOS y estado de app ya instalada.
 - [ ] Revisar responsive, safe areas, teclado móvil, navegación inferior, contraste, foco y lectores de pantalla.
 - [ ] Agregar tratamiento de conexión: indicar estado offline, evitar envíos duplicados y explicar qué acciones requieren conexión.
 - [ ] Probar registro, login, chat, bitácora, calendario, perfil, cierre de sesión y expiración de sesión instalados como PWA.

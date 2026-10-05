@@ -1,2 +1,3 @@
 import { BreathingPractice } from "@/components/breathing-practice";
-export default function BreathingPage(){return <BreathingPractice/>}
+import { requireAthletePage } from "@/lib/auth/server-session";
+export default async function BreathingPage(){await requireAthletePage();return <BreathingPractice/>}

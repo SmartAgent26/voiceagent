@@ -1,2 +1,7 @@
 import { AdminShell } from "@/components/admin-shell";
-export default function AdminLayout({children}:{children:React.ReactNode}){return <AdminShell>{children}</AdminShell>}
+import { requireSuperadminPage } from "@/lib/auth/server-session";
+
+export default async function AdminLayout({children}:{children:React.ReactNode}) {
+  await requireSuperadminPage();
+  return <AdminShell>{children}</AdminShell>;
+}

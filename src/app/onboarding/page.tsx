@@ -1,2 +1,3 @@
 import { OnboardingFlow } from "@/components/onboarding-flow";
-export default function OnboardingPage() { return <OnboardingFlow />; }
+import { requireAthletePage } from "@/lib/auth/server-session";
+export default async function OnboardingPage() { await requireAthletePage(); return <OnboardingFlow />; }

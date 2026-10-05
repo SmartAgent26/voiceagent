@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ReactNode, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { clearServerSession } from "@/lib/auth/browser-session";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 
 const navigation = [
@@ -10,6 +11,7 @@ const navigation = [
   { href: "/admin/users/manage", label: "Usuarios y suscripciones" },
   { href: "/admin/plans", label: "Planes" },
   { href: "/admin/agent", label: "Agente Meli" },
+  { href: "/admin/privacy", label: "Privacidad" },
   { href: "/admin/audit", label: "Operación y auditoría" },
 ];
 
@@ -18,6 +20,13 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const [name, setName] = useState("Superadmin");
   const [avatar, setAvatar] = useState<string | null>(null);
   const pathname = usePathname();
+
+  async function recordAccess(action: "admin_login" | "admin_logout") {
+    const client = createBrowserSupabaseClient();
+    const { data } = await client.auth.getSession();
+    if (!data.session?.access_token) return;
+    await fetch("/api/admin/audit-session", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${data.session.access_token}` }, body: JSON.stringify({ action }) });
+  }
 
   useEffect(() => {
     const client = createBrowserSupabaseClient();
@@ -31,7 +40,8 @@ export function AdminShell({ children }: { children: ReactNode }) {
         const { data: signed } = await client.storage.from("avatars").createSignedUrl(data.avatar_path, 3600);
         setAvatar(signed?.signedUrl || null);
       }
-      await client.from("audit_log").insert({ actor_id: user.id, action: "admin_login", entity_type: "auth" });
+      const accessKey = `aksis-admin-access:${user.id}`;
+      if (sessionStorage.getItem(accessKey) !== "logged") { sessionStorage.setItem(accessKey, "logged"); void recordAccess("admin_login"); }
       setReady(true);
     })();
   }, []);
@@ -39,8 +49,9 @@ export function AdminShell({ children }: { children: ReactNode }) {
   async function logout() {
     const client = createBrowserSupabaseClient();
     const { data: { user } } = await client.auth.getUser();
-    if (user) await client.from("audit_log").insert({ actor_id: user.id, action: "admin_logout", entity_type: "auth" });
-    await client.auth.signOut(); location.assign("/access");
+    await recordAccess("admin_logout");
+    if (user) sessionStorage.removeItem(`aksis-admin-access:${user.id}`);
+    await client.auth.signOut(); await clearServerSession(); location.assign("/access");
   }
 
   if (!ready) return <main className="admin-loading">Verificando acceso administrativo…</main>;

@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "lint": "eslint .",
+    "test:safety": "node --experimental-strip-types --test src/lib/agent/safety.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "engines": {
@@ -17,6 +18,7 @@
     "openai": "^7.27.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "sharp": "^0.35.5",
     "zod": "^4.6.5"
   },
   "devDependencies": {

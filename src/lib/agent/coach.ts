@@ -1,6 +1,8 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { getProviderApiKey } from "@/lib/agent/credentials";
 import { ontologicalCoachPrompt } from "@/lib/agent/ontological-prompt";
+import { assessCoachOutput } from "@/lib/agent/safety";
+import { assertProviderAvailable, recordProviderOutcome } from "@/lib/security/provider-circuit";
 
 export const coachInstructions = `Sos Aksis, coach ontológico especializado en deportistas adultos. Tu trabajo es GUIAR, no explicar ni dar un discurso. Tu voz es la de un coach argentino joven, cercano, actual y profesional; no afirmes ser humano ni inventes experiencia personal.
 
@@ -126,17 +128,32 @@ export function interpolatePromptVariables(template: string, variables: Record<s
   return template.replace(/@([a-z_]+)/gi, (match, name: string) => variables[name.toLowerCase()] || match);
 }
 
+async function withProviderCircuit<T>(provider: string, operation: () => Promise<T>) {
+  await assertProviderAvailable(provider);
+  try {
+    const result = await operation();
+    await recordProviderOutcome(provider, true);
+    return result;
+  } catch (error) {
+    await recordProviderOutcome(provider, false);
+    throw error;
+  }
+}
+
 export async function createCoachReply(history: CoachTurn[], athleteContext = "", variables: Record<string, string> = {}) {
   const configuration = await getConfiguration();
   const { provider, model } = configuration;
   const referenceQuestionGuide = await getReferenceQuestionGuide();
   const resolvedPrompt = `${interpolatePromptVariables(configuration.system_prompt, variables)}${conversationStyleInstructions}${referenceQuestionGuide}`;
   const contextualConfiguration = athleteContext ? { ...configuration, system_prompt: `${resolvedPrompt}\n\nCONTEXTO PRIVADO DEL DEPORTISTA (usalo con discreción; no lo recites):\n${athleteContext}` } : { ...configuration, system_prompt: resolvedPrompt };
+  return withProviderCircuit(provider, async () => {
   if (provider !== "gemini") {
     const result = await createOpenAICompatibleReply(contextualConfiguration, history);
     const isSensitiveReferral = /(107|911|0800-999-0091|\b135\b|salud mental|autolesi[oó]n|suicidio|emergencia)/i.test(result.content);
     const hasCompleteQuestion = /\?\s*$/.test(result.content);
-    return { content: !result.content || (!isSensitiveReferral && !hasCompleteQuestion) ? "¿Qué aspecto de esta situación te gustaría mirar con más detalle?" : result.content, model, provider, usage: result.usage };
+    const content = !result.content || (!isSensitiveReferral && !hasCompleteQuestion) ? "¿Qué aspecto de esta situación te gustaría mirar con más detalle?" : result.content;
+    const safety = assessCoachOutput(content);
+    return { content: safety.blocked ? safety.response || "No puedo responder de esa manera." : content, model, provider, usage: result.usage };
   }
   const apiKey = await getProviderApiKey("gemini");
   if (!apiKey) throw new Error("GEMINI_API_KEY no está configurada.");
@@ -173,10 +190,12 @@ export async function createCoachReply(history: CoachTurn[], athleteContext = ""
   const isSensitiveReferral = /(107|911|0800-999-0091|\b135\b|salud mental|autolesi[oó]n|suicidio|emergencia)/i.test(content);
   const hasCompleteQuestion = /\?\s*$/.test(content);
 
-  return {
-    content: !content || isTechnicalSafetyLabel || (!isSensitiveReferral && !hasCompleteQuestion)
+  const resolvedContent = !content || isTechnicalSafetyLabel || (!isSensitiveReferral && !hasCompleteQuestion)
       ? "¿Qué hiciste hoy que te gustaría poder repetir en tu próximo entrenamiento?"
-      : content,
+      : content;
+  const safety = assessCoachOutput(resolvedContent);
+  return {
+    content: safety.blocked ? safety.response || "No puedo responder de esa manera." : resolvedContent,
     model,
     provider,
     usage: {
@@ -185,6 +204,7 @@ export async function createCoachReply(history: CoachTurn[], athleteContext = ""
       totalTokens: result.usageMetadata?.totalTokenCount ?? 0,
     },
   };
+  });
 }
 
 export async function createCompactSummary(source: string, kind: "session" | "weekly_journal") {

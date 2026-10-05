@@ -1,2 +1,3 @@
 import { TermsFlow } from "@/components/terms-flow";
-export default function TermsPage() { return <TermsFlow />; }
+import { requireAthletePage } from "@/lib/auth/server-session";
+export default async function TermsPage() { await requireAthletePage(); return <TermsFlow />; }

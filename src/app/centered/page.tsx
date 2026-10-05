@@ -1,2 +1,3 @@
 import { Centered } from "@/components/centered";
-export default function CenteredPage(){return <Centered/>}
+import { requireAthletePage } from "@/lib/auth/server-session";
+export default async function CenteredPage(){await requireAthletePage();return <Centered/>}

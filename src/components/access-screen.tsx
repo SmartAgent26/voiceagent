@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import logo from "../../imagenes/logo.jpg";
+import { synchronizeServerSession } from "@/lib/auth/browser-session";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { useAksisToast } from "@/components/aksis-toast";
 
@@ -38,6 +39,15 @@ export function AccessScreen() {
   }, []);
 
   useEffect(() => {
+    const client = createBrowserSupabaseClient();
+    void client.auth.getSession().then(async ({ data }) => {
+      if (!data.session?.access_token) return;
+      await synchronizeServerSession(data.session.access_token);
+      window.location.assign("/app");
+    });
+  }, []);
+
+  useEffect(() => {
     if (status !== "success") return;
     const redirect = window.setTimeout(() => {
       setMode("login");
@@ -69,10 +79,12 @@ export function AccessScreen() {
 
       if (result.error) throw result.error;
       if (mode === "login") {
+        if (result.data.session?.access_token) await synchronizeServerSession(result.data.session.access_token);
         window.location.assign("/app");
         return;
       }
       if (result.data.session) {
+        await synchronizeServerSession(result.data.session.access_token);
         window.location.assign("/terms");
         return;
       }

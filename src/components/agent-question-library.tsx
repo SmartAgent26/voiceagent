@@ -26,6 +26,13 @@ export function AgentQuestionLibrary() {
   const [filter, setFilter] = useState<"all" | Category>("all");
   const [page, setPage] = useState(1);
 
+  async function operate(body: unknown) {
+    const { data } = await client.auth.getSession();
+    const response = await fetch("/api/admin/operations", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${data.session?.access_token || ""}` }, body: JSON.stringify(body) });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || "No pudimos completar la operación.");
+  }
+
   async function load() {
     setLoading(true);
     const { data, error } = await client.from("agent_reference_questions").select("id,category,question,purpose,is_active,position").order("category").order("position");
@@ -40,23 +47,19 @@ export function AgentQuestionLibrary() {
     if (!draft.question.trim()) return;
     setSaving(true);
     const payload = { category: draft.category, question: draft.question.trim(), purpose: draft.purpose.trim() };
-    const result = editing
-      ? await client.from("agent_reference_questions").update(payload).eq("id", editing)
-      : await client.from("agent_reference_questions").insert({ ...payload, position: (Math.max(0, ...questions.map((item) => item.position)) + 10) });
+    try { await operate(editing ? { action: "question.update", id: editing, data: payload } : { action: "question.create", data: payload }); }
+    catch (error) { setSaving(false); showToast(error instanceof Error ? error.message : "No se pudo guardar la pregunta.", "error"); return; }
     setSaving(false);
-    if (result.error) { showToast(`No se pudo guardar la pregunta: ${result.error.message}`, "error"); return; }
     showToast(editing ? "Pregunta actualizada correctamente." : "Pregunta agregada a la biblioteca.", "success");
     reset(); await load();
   }
   async function toggle(question: ReferenceQuestion) {
-    const { error } = await client.from("agent_reference_questions").update({ is_active: !question.is_active }).eq("id", question.id);
-    if (error) showToast("No se pudo actualizar el estado de la pregunta.", "error");
-    else { showToast(question.is_active ? "Pregunta desactivada." : "Pregunta activada.", "info"); await load(); }
+    try { await operate({ action: "question.active", id: question.id, isActive: !question.is_active }); showToast(question.is_active ? "Pregunta desactivada." : "Pregunta activada.", "info"); await load(); }
+    catch { showToast("No se pudo actualizar el estado de la pregunta.", "error"); }
   }
   async function remove(question: ReferenceQuestion) {
-    const { error } = await client.from("agent_reference_questions").delete().eq("id", question.id);
-    if (error) showToast("No se pudo eliminar la pregunta.", "error");
-    else { showToast("Pregunta eliminada de la biblioteca.", "success"); if (editing === question.id) reset(); await load(); }
+    try { await operate({ action: "question.delete", id: question.id }); showToast("Pregunta eliminada de la biblioteca.", "success"); if (editing === question.id) reset(); await load(); }
+    catch { showToast("No se pudo eliminar la pregunta.", "error"); }
   }
   const pageSize = 6;
   const filtered = questions.filter((item) => filter === "all" || item.category === filter);

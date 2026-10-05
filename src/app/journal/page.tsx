@@ -1,2 +1,3 @@
 import { Journal } from "@/components/journal";
-export default function JournalPage() { return <Journal />; }
+import { requireAthletePage } from "@/lib/auth/server-session";
+export default async function JournalPage() { await requireAthletePage(); return <Journal />; }

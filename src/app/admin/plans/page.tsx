@@ -13,6 +13,13 @@ export default function Plans() {
   const client = createBrowserSupabaseClient();
   const { showToast } = useAksisToast();
 
+  async function operate(body: unknown) {
+    const { data } = await client.auth.getSession();
+    const response = await fetch("/api/admin/operations", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${data.session?.access_token || ""}` }, body: JSON.stringify(body) });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || "No pudimos completar la operación.");
+  }
+
   async function load() {
     const { data, error } = await client.from("subscription_plans").select("id,name,monthly_blocks,price_ars,active").order("created_at");
     if (error) showToast("No pudimos cargar los planes. Intentá nuevamente.", "error");
@@ -23,31 +30,24 @@ export default function Plans() {
   async function create(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const value = new FormData(event.currentTarget);
-    const { error } = await client.from("subscription_plans").insert({ name: String(value.get("name") || "").trim(), monthly_blocks: Number(value.get("blocks")), price_ars: value.get("price") === "" ? null : Number(value.get("price")) });
-    if (error) return showToast(error.message, "error");
+    try { await operate({ action: "plan.create", data: { name: String(value.get("name") || "").trim(), monthlyBlocks: Number(value.get("blocks")), priceArs: value.get("price") === "" ? null : Number(value.get("price")) } }); } catch (error) { return showToast(error instanceof Error ? error.message : "No pudimos crear el plan.", "error"); }
     setCreating(false); showToast("Plan creado correctamente.", "success"); void load();
   }
 
   async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); if (!editing) return;
     const value = new FormData(event.currentTarget);
-    const { error } = await client.from("subscription_plans").update({ name: String(value.get("name") || "").trim(), monthly_blocks: Number(value.get("blocks")), price_ars: value.get("price") === "" ? null : Number(value.get("price")), active: String(value.get("active")) === "true" }).eq("id", editing.id);
-    if (error) return showToast(error.message, "error");
+    try { await operate({ action: "plan.update", id: editing.id, data: { name: String(value.get("name") || "").trim(), monthlyBlocks: Number(value.get("blocks")), priceArs: value.get("price") === "" ? null : Number(value.get("price")), active: String(value.get("active")) === "true" } }); } catch (error) { return showToast(error instanceof Error ? error.message : "No pudimos actualizar el plan.", "error"); }
     setEditing(null); showToast("Plan actualizado correctamente.", "success"); void load();
   }
 
   async function cancel(plan: Plan) {
-    const { error } = await client.from("subscription_plans").update({ active: false }).eq("id", plan.id);
-    if (error) return showToast(error.message, "error");
+    try { await operate({ action: "plan.cancel", id: plan.id }); } catch (error) { return showToast(error instanceof Error ? error.message : "No pudimos cancelar el plan.", "error"); }
     setEditing(null); showToast("El plan quedó cancelado; su historial se conserva.", "info"); void load();
   }
 
   async function remove(plan: Plan) {
-    const { count, error: usageError } = await client.from("user_subscriptions").select("id", { count: "exact", head: true }).eq("plan_id", plan.id);
-    if (usageError) return showToast(usageError.message, "error");
-    if ((count || 0) > 0) return showToast("Este plan tiene atletas vinculados. Cancelalo para preservar el historial.", "info");
-    const { error } = await client.from("subscription_plans").delete().eq("id", plan.id);
-    if (error) return showToast(error.message, "error");
+    try { await operate({ action: "plan.delete", id: plan.id }); } catch (error) { return showToast(error instanceof Error ? error.message : "No pudimos eliminar el plan.", "error"); }
     setEditing(null); showToast("Plan eliminado definitivamente.", "success"); void load();
   }
 

@@ -1,5 +1,7 @@
 import { AppGate } from "@/components/app-gate";
+import { requireAthletePage } from "@/lib/auth/server-session";
 
-export default function AthletePage() {
+export default async function AthletePage() {
+  await requireAthletePage();
   return <AppGate />;
 }

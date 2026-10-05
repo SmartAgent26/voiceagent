@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { clearServerSession } from "@/lib/auth/browser-session";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { useAksisToast } from "@/components/aksis-toast";
+import { PwaInstall } from "@/components/pwa-install";
 
 type IconProps = { size?: number };
 function Glyph({ symbol }: { symbol: string }) { return <span className="aksis-icon" aria-hidden="true">{symbol}</span>; }
@@ -85,8 +87,8 @@ export function AthleteSpace() {
 
   async function saveGoals(goals: Goal[]) { const client = createBrowserSupabaseClient(); const { data } = await client.auth.getUser(); if (!data.user) return; await client.from("athlete_profiles").update({ goals_list: goals }).eq("user_id", data.user.id); setAthlete(current => current ? { ...current, goals } : current); }
   async function saveGoal(goal: Goal) { const goals = athlete?.goals || []; await saveGoals(goals.some(item => item.id === goal.id) ? goals.map(item => item.id === goal.id ? goal : item) : [...goals, goal]); setGoalEditor(null); }
-  async function saveProfile(event: React.FormEvent<HTMLFormElement>) { event.preventDefault(); const form = new FormData(event.currentTarget); const name = String(form.get("name") || "").trim(); const coachName = String(form.get("coach") || "").trim(); const image = form.get("avatar"); const client = createBrowserSupabaseClient(); const { data } = await client.auth.getUser(); if (!data.user) return; let avatarUrl = athlete?.avatarUrl ?? null; const profileUpdate: { display_name: string; avatar_path?: string } = { display_name: name }; if (image instanceof File && image.size > 0) { if (!['image/jpeg','image/png','image/webp'].includes(image.type) || image.size > 5 * 1024 * 1024) { showToast("Elegí una imagen JPG, PNG o WebP de hasta 5 MB.", "error"); return; } const extension = image.type === 'image/png' ? 'png' : image.type === 'image/webp' ? 'webp' : 'jpg'; const path = `${data.user.id}/profile.${extension}`; const { error } = await client.storage.from("avatars").upload(path, image, { upsert: true, contentType: image.type }); if (error) { showToast("No pudimos guardar la imagen. Intentá nuevamente.", "error"); return; } profileUpdate.avatar_path = path; const { data: signed } = await client.storage.from("avatars").createSignedUrl(path, 60 * 60); avatarUrl = signed?.signedUrl ?? null; } await Promise.all([client.from("profiles").update(profileUpdate).eq("id", data.user.id), client.from("athlete_profiles").update({ preferred_coach_name: coachName }).eq("user_id", data.user.id)]); setAthlete(current => current ? { ...current, name, coachName, avatarUrl } : current); setProfileEditor(false); showToast("Perfil actualizado correctamente.", "success"); }
-  async function signOut() { await createBrowserSupabaseClient().auth.signOut(); location.assign("/access"); }
+  async function saveProfile(event: React.FormEvent<HTMLFormElement>) { event.preventDefault(); const form = new FormData(event.currentTarget); const name = String(form.get("name") || "").trim(); const coachName = String(form.get("coach") || "").trim(); const image = form.get("avatar"); const client = createBrowserSupabaseClient(); const { data } = await client.auth.getUser(); if (!data.user) return; let avatarUrl = athlete?.avatarUrl ?? null; if (image instanceof File && image.size > 0) { const { data: session } = await client.auth.getSession(); const upload = new FormData(); upload.append("avatar", image); const response = await fetch("/api/profile/avatar", { method: "POST", headers: { Authorization: `Bearer ${session.session?.access_token || ""}` }, body: upload }); const payload = await response.json() as { path?: string; error?: string }; if (!response.ok || !payload.path) { showToast(payload.error || "No pudimos guardar la imagen. Intentá nuevamente.", "error"); return; } const { data: signed } = await client.storage.from("avatars").createSignedUrl(payload.path, 60 * 60); avatarUrl = signed?.signedUrl ?? null; } await Promise.all([client.from("profiles").update({ display_name: name }).eq("id", data.user.id), client.from("athlete_profiles").update({ preferred_coach_name: coachName }).eq("user_id", data.user.id)]); setAthlete(current => current ? { ...current, name, coachName, avatarUrl } : current); setProfileEditor(false); showToast("Perfil actualizado correctamente.", "success"); }
+  async function signOut() { await createBrowserSupabaseClient().auth.signOut(); await clearServerSession(); location.assign("/access"); }
   async function saveDetailedProfile(event: React.FormEvent<HTMLFormElement>) {
     const form = new FormData(event.currentTarget);
     const sport = String(form.get("sport") || "").trim();
@@ -116,6 +118,7 @@ export function AthleteSpace() {
       </header>
 
       <div className="athlete-space-content">
+        <PwaInstall />
         <section className="athlete-identity">
           <div className="athlete-avatar-wrap">
             <div className="athlete-avatar">{athlete?.avatarUrl ? <img src={athlete.avatarUrl} alt="" /> : initial}</div>

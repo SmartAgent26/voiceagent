@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAuthenticatedAdminId } from "@/lib/agent/auth";
 import { encryptCredential, getProviderApiKey, type AgentProvider } from "@/lib/agent/credentials";
+import { enforceRateLimit, parseJsonBody, rateLimitHeaders, RequestBodyTooLargeError } from "@/lib/security/request-guards";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 const providerSchema = z.enum(["gemini", "openai", "openrouter"]);
@@ -26,18 +27,27 @@ export async function GET(request: Request) {
   const adminId = await getAuthenticatedAdminId(request);
   const provider = providerSchema.safeParse(new URL(request.url).searchParams.get("provider"));
   if (!adminId) return NextResponse.json({ error: "No autorizado." }, { status: 401 });
+  const userLimit = await enforceRateLimit(request, { scope: "admin-provider-read", identity: adminId, limit: 20, windowMs: 60_000 });
+  if (!userLimit.allowed) return NextResponse.json({ error: "Demasiadas consultas de modelos. Intentá nuevamente en un momento." }, { status: 429, headers: rateLimitHeaders(userLimit) });
   if (!provider.success) return NextResponse.json({ error: "Proveedor inválido." }, { status: 400 });
   try { return NextResponse.json({ models: await modelsFor(provider.data), configured: true }); }
-  catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : "No fue posible consultar los modelos.", configured: false }, { status: 400 }); }
+  catch (error) {
+    const message = error instanceof Error ? error.message : "No fue posible consultar los modelos.";
+    if (message.includes("No hay una clave privada") || message.includes("AGENT_CREDENTIALS_ENCRYPTION_KEY_V1")) return NextResponse.json({ models: [], configured: false });
+    return NextResponse.json({ error: message, configured: false }, { status: 400 });
+  }
 }
 
 export async function PUT(request: Request) {
   const adminId = await getAuthenticatedAdminId(request);
   if (!adminId) return NextResponse.json({ error: "No autorizado." }, { status: 401 });
   try {
-    const { provider, apiKey } = saveSchema.parse(await request.json());
+    const userLimit = await enforceRateLimit(request, { scope: "admin-provider-write", identity: adminId, limit: 5, windowMs: 60 * 60_000 });
+    if (!userLimit.allowed) return NextResponse.json({ error: "Alcanzaste el límite de cambios de credenciales. Intentá nuevamente más tarde." }, { status: 429, headers: rateLimitHeaders(userLimit) });
+    const { provider, apiKey } = await parseJsonBody(request, saveSchema, 4_000);
     const client = createServerSupabaseClient(); if (!client) throw new Error("Falta configuración del servidor.");
-    await client.from("agent_provider_credentials").upsert({ provider, ...encryptCredential(apiKey), updated_by: adminId });
+    const { error: saveError } = await client.from("agent_provider_credentials").upsert({ provider, ...encryptCredential(apiKey), updated_by: adminId });
+    if (saveError) throw saveError;
     return NextResponse.json({ ok: true, models: await modelsFor(provider) });
-  } catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : "No fue posible guardar la clave." }, { status: 400 }); }
+  } catch (error) { return NextResponse.json({ error: error instanceof RequestBodyTooLargeError ? error.message : error instanceof Error ? error.message : "No fue posible guardar la clave." }, { status: error instanceof RequestBodyTooLargeError ? 413 : 400 }); }
 }
