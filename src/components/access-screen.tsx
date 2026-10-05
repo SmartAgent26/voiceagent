@@ -40,11 +40,12 @@ export function AccessScreen() {
 
   useEffect(() => {
     const client = createBrowserSupabaseClient();
-    void client.auth.getSession().then(async ({ data }) => {
-      if (!data.session?.access_token) return;
-      await synchronizeServerSession(data.session.access_token);
-      window.location.assign("/app");
-    });
+    void (async () => {
+      const { data: identity, error } = await client.auth.getUser();
+      if (error || !identity.user) return;
+      const { data: sessionData } = await client.auth.getSession();
+      if (sessionData.session?.access_token && await synchronizeServerSession(sessionData.session.access_token)) window.location.assign("/app");
+    })();
   }, []);
 
   useEffect(() => {
@@ -79,12 +80,12 @@ export function AccessScreen() {
 
       if (result.error) throw result.error;
       if (mode === "login") {
-        if (result.data.session?.access_token) await synchronizeServerSession(result.data.session.access_token);
+        if (!result.data.session?.access_token || !await synchronizeServerSession(result.data.session.access_token)) throw new Error("No pudimos establecer la sesión segura. Volvé a intentarlo.");
         window.location.assign("/app");
         return;
       }
       if (result.data.session) {
-        await synchronizeServerSession(result.data.session.access_token);
+        if (!await synchronizeServerSession(result.data.session.access_token)) throw new Error("No pudimos establecer la sesión segura. Volvé a intentarlo.");
         window.location.assign("/terms");
         return;
       }

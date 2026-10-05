@@ -1,11 +1,16 @@
 "use client";
 
 export async function synchronizeServerSession(accessToken: string) {
-  await fetch("/api/auth/session", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${accessToken}` },
-    cache: "no-store",
-  });
+  try {
+    const response = await fetch("/api/auth/session", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${accessToken}` },
+      cache: "no-store",
+    });
+    return response.ok;
+  } catch {
+    return false;
+  }
 }
 
 export async function clearServerSession() {
