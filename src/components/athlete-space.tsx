@@ -85,8 +85,27 @@ export function AthleteSpace() {
     })();
   }, []);
 
-  async function saveGoals(goals: Goal[]) { const client = createBrowserSupabaseClient(); const { data } = await client.auth.getUser(); if (!data.user) return; await client.from("athlete_profiles").update({ goals_list: goals }).eq("user_id", data.user.id); setAthlete(current => current ? { ...current, goals } : current); }
-  async function saveGoal(goal: Goal) { const goals = athlete?.goals || []; await saveGoals(goals.some(item => item.id === goal.id) ? goals.map(item => item.id === goal.id ? goal : item) : [...goals, goal]); setGoalEditor(null); }
+  async function saveGoals(goals: Goal[]) {
+    const client = createBrowserSupabaseClient();
+    const { data, error: authError } = await client.auth.getUser();
+    if (!data.user || authError) {
+      showToast("No pudimos validar tu sesión. Volvé a ingresar e intentá nuevamente.", "error");
+      return false;
+    }
+    const { error } = await client.from("athlete_profiles").update({ goals_list: goals }).eq("user_id", data.user.id);
+    if (error) {
+      showToast("No pudimos guardar el objetivo. Intentá nuevamente.", "error");
+      return false;
+    }
+    setAthlete(current => current ? { ...current, goals } : current);
+    showToast("Objetivo guardado correctamente.", "success");
+    return true;
+  }
+  async function saveGoal(goal: Goal) {
+    const goals = athlete?.goals || [];
+    const nextGoals = goals.some(item => item.id === goal.id) ? goals.map(item => item.id === goal.id ? goal : item) : [...goals, goal];
+    if (await saveGoals(nextGoals)) setGoalEditor(null);
+  }
   async function saveProfile(event: React.FormEvent<HTMLFormElement>) { event.preventDefault(); const form = new FormData(event.currentTarget); const name = String(form.get("name") || "").trim(); const coachName = String(form.get("coach") || "").trim(); const image = form.get("avatar"); const client = createBrowserSupabaseClient(); const { data } = await client.auth.getUser(); if (!data.user) return; let avatarUrl = athlete?.avatarUrl ?? null; if (image instanceof File && image.size > 0) { const { data: session } = await client.auth.getSession(); const upload = new FormData(); upload.append("avatar", image); const response = await fetch("/api/profile/avatar", { method: "POST", headers: { Authorization: `Bearer ${session.session?.access_token || ""}` }, body: upload }); const payload = await response.json() as { path?: string; error?: string }; if (!response.ok || !payload.path) { showToast(payload.error || "No pudimos guardar la imagen. Intentá nuevamente.", "error"); return; } const { data: signed } = await client.storage.from("avatars").createSignedUrl(payload.path, 60 * 60); avatarUrl = signed?.signedUrl ?? null; } await Promise.all([client.from("profiles").update({ display_name: name }).eq("id", data.user.id), client.from("athlete_profiles").update({ preferred_coach_name: coachName }).eq("user_id", data.user.id)]); setAthlete(current => current ? { ...current, name, coachName, avatarUrl } : current); setProfileEditor(false); showToast("Perfil actualizado correctamente.", "success"); }
   async function signOut() { await createBrowserSupabaseClient().auth.signOut(); await clearServerSession(); location.assign("/access"); }
   async function saveDetailedProfile(event: React.FormEvent<HTMLFormElement>) {
@@ -164,13 +183,13 @@ export function AthleteSpace() {
       </div>
 
       <nav className="athlete-bottom-nav"><Link className="active" href="/app"><Sparkles size={20} />Espacio</Link><Link href="/centered"><span className="breath-icon">∞</span>Centrado</Link><Link href="/journal"><Edit3 size={20} />Bitácora</Link><Link href="/calendar"><Calendar size={20} />Agenda</Link><Link href="/chat"><Bot size={20} />Diálogo</Link></nav>
-      {goalEditor && <GoalModal goal={goalEditor} onClose={() => setGoalEditor(null)} onSave={saveGoal} onDelete={async () => { await saveGoals((athlete?.goals || []).filter(goal => goal.id !== goalEditor.id)); setGoalEditor(null); }} />}
+      {goalEditor && <GoalModal goal={goalEditor} onClose={() => setGoalEditor(null)} onSave={saveGoal} onDelete={async () => { if (await saveGoals((athlete?.goals || []).filter(goal => goal.id !== goalEditor.id))) setGoalEditor(null); }} />}
       {profileEditor && athlete && <ProfileModal athlete={athlete} onClose={() => setProfileEditor(false)} onSubmit={saveDetailedProfile} />}
     </main>
   );
 }
 
-function GoalModal({ goal, onClose, onSave, onDelete }: { goal: Goal; onClose: () => void; onSave: (goal: Goal) => void; onDelete: () => void }) { return <form className="aksis-modal" onSubmit={event => { event.preventDefault(); const form = new FormData(event.currentTarget); onSave({ ...goal, title: String(form.get("title") || ""), description: String(form.get("description") || ""), status: String(form.get("status")) === "closed" ? "closed" : "active" }); }}><div><h2>{goal.title ? "Objetivo" : "Nuevo objetivo"}</h2><label>Título<input name="title" defaultValue={goal.title} required /></label><label>Descripción<textarea name="description" defaultValue={goal.description} /></label><label>Estado<select name="status" defaultValue={goal.status}><option value="active">Activo</option><option value="closed">Cerrado</option></select></label><footer><button type="button" onClick={onClose}>Cancelar</button>{!goal.id.startsWith("initial-") && <button type="button" onClick={onDelete}>Borrar</button>}<button type="submit">Guardar</button></footer></div></form>; }
+function GoalModal({ goal, onClose, onSave, onDelete }: { goal: Goal; onClose: () => void; onSave: (goal: Goal) => Promise<void>; onDelete: () => Promise<void> }) { return <form className="aksis-modal" onSubmit={event => { event.preventDefault(); const form = new FormData(event.currentTarget); void onSave({ ...goal, title: String(form.get("title") || ""), description: String(form.get("description") || ""), status: String(form.get("status")) === "closed" ? "closed" : "active" }); }}><div><h2>{goal.title ? "Objetivo" : "Nuevo objetivo"}</h2><label>Título<input name="title" defaultValue={goal.title} required /></label><label>Descripción<textarea name="description" defaultValue={goal.description} /></label><label>Estado<select name="status" defaultValue={goal.status}><option value="active">Activo</option><option value="closed">Cerrado</option></select></label><footer><button type="button" onClick={onClose}>Cancelar</button>{!goal.id.startsWith("initial-") && <button type="button" onClick={() => void onDelete()}>Borrar</button>}<button type="submit">Guardar</button></footer></div></form>; }
 
 function ProfileModal({ athlete, onClose, onSubmit }: { athlete: AthleteData; onClose: () => void; onSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void> }) {
   const [cropOpen, setCropOpen] = useState(false);
