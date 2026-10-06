@@ -11,6 +11,32 @@
 
 * { box-sizing: border-box; }
 
+/* Preferencia personal de lectura: se conserva entre sesiones en el dispositivo. */
+html.aksis-large-text { font-size: 200%; }
+.text-size-control { align-items:center; background:#fff; border:1px solid #b9ded2; border-radius:99px; box-shadow:0 .4rem 1rem rgba(20,85,70,.14); color:#087d6d; display:flex; font:700 .72rem ui-sans-serif,system-ui,sans-serif; height:2.3rem; justify-content:center; padding:0; position:fixed; right:.8rem; top:4.7rem; transition:background .2s ease,box-shadow .2s ease,transform .2s ease; width:2.3rem; z-index:40; }
+.text-size-control:hover,.text-size-control.is-large { background:#dff4eb; box-shadow:0 .6rem 1.25rem rgba(20,85,70,.18); transform:translateY(-1px); }
+.text-size-control:focus-visible { outline:3px solid rgba(72,169,153,.35); outline-offset:2px; }
+
+/* Compositor de voz: mantener, cancelar a la izquierda o bloquear a la derecha. */
+.chat-input { min-height:4.35rem; }
+.chat-input .chat-mic { align-items:center; background:linear-gradient(145deg,#d9f4e9,#effaf5); border:1px solid #a9dccb; box-shadow:0 .3rem .8rem rgba(10,109,94,.1); color:#087d6d; display:flex; flex:none; font-size:0; height:2.85rem; justify-content:center; touch-action:none; transition:background .2s ease,box-shadow .2s ease,transform .2s ease; width:2.85rem; }
+.chat-input .chat-mic:hover { background:#cdeede; box-shadow:0 .5rem 1rem rgba(10,109,94,.16); transform:translateY(-1px); }
+.chat-input .chat-mic span { font-size:1.08rem; filter:saturate(.7); }
+.chat-input .chat-send { align-items:center; display:flex; flex:none; gap:.18rem; justify-content:center; min-width:4.9rem; }
+.chat-input.is-recording { gap:.65rem; }
+.chat-record-cancel,.chat-record-send { align-items:center; border:0; border-radius:50%; display:flex; flex:none; height:2.85rem; justify-content:center; padding:0; width:2.85rem; }
+.chat-record-cancel { background:#fff5f3; border:1px solid #f0c8c3; color:#ad5a53; font-size:1.25rem; }
+.chat-record-send { background:linear-gradient(135deg,#087d6d,#4eaa9b); box-shadow:0 .35rem .9rem rgba(10,109,94,.19); color:#fff; font-size:1.25rem; }
+.chat-record-status { align-items:center; display:grid; flex:1; gap:.28rem .45rem; grid-template-columns:auto auto 1fr; min-width:0; }
+.chat-record-status>i { background:#db4260; border-radius:50%; height:.48rem; width:.48rem; }
+.chat-record-status time { color:#274d44; font:500 .83rem ui-sans-serif,system-ui,sans-serif; }
+.chat-record-status small { color:#6b827a; font-size:.54rem; grid-column:1/-1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.chat-wave { color:#087d6d; font-family:ui-monospace,SFMono-Regular,monospace; font-size:.7rem; letter-spacing:-.11rem; overflow:hidden; white-space:nowrap; }
+.chat-record-status>i,.chat-wave { animation:chat-record-pulse 1.05s ease-in-out infinite; }
+.chat-record-lock { color:#087d6d; font-size:1.25rem; padding-right:.25rem; }
+@keyframes chat-record-pulse { 50% { opacity:.38; transform:scaleY(.58); } }
+@media (max-width:26rem) { .chat-input .chat-send { min-width:2.85rem; width:2.85rem; }.chat-input .chat-send span { display:none; }.chat-record-status { gap:.2rem .35rem; }.chat-wave { font-size:.58rem; }.chat-record-status small { font-size:.5rem; } }
+
 body {
   margin: 0;
   background: var(--paper);
